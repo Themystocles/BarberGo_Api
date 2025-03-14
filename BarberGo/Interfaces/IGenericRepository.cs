@@ -2,7 +2,7 @@
 
 namespace BarberGo.Interfaces
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : class, IEntity
     {
         Task<T> CreateAsync(T entity);
         Task<T> UpdateAsync(T entity);
