@@ -1,4 +1,7 @@
-using BarberGo.Data; 
+using BarberGo.Data;
+using BarberGo.Interfaces;
+using BarberGo.Repositories;
+using BarberGo.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarberGo
@@ -12,6 +15,11 @@ namespace BarberGo
             // Configurar o DbContext com a string de conexão
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Aqui ele pega a string de conexão no appsettings.json
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
+
+
+
 
             // Add services to the container.
             builder.Services.AddControllers();
