@@ -26,7 +26,7 @@ namespace BarberGo.Repositories
 
         public async Task<T> UpdateAsync(T entity)
         {
-            _dbSet.Update(entity);
+            _context.Update(entity);
             await _context.SaveChangesAsync();
             return entity;
         }

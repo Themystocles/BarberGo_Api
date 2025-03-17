@@ -4,6 +4,8 @@ using BarberGo.Repositories;
 using BarberGo.Services;
 using Microsoft.EntityFrameworkCore;
 
+
+
 namespace BarberGo
 {
     public class Program
@@ -14,7 +16,8 @@ namespace BarberGo
 
             // Configurar o DbContext com a string de conexão
             builder.Services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Aqui ele pega a string de conexão no appsettings.json
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); 
+            builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
 
@@ -36,6 +39,7 @@ namespace BarberGo
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 
