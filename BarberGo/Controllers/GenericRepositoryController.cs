@@ -22,9 +22,11 @@ namespace BarberGo.Controllers
             await _genericRepositoryServices.CreateAsync(entity);
             return Ok(entity);
         }
-        [HttpPut("update")]
-        public async Task<ActionResult<T>> UpdateEntity(T entity)
+        [HttpPut("update/{id}")]
+        public async Task<ActionResult<T>> UpdateEntity(int id, T entity)
         {
+            entity.Id = id;
+           await _genericRepositoryServices.UpdateAsync(entity);
             return Ok(entity);
         }
     }
