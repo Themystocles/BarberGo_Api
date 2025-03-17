@@ -19,8 +19,9 @@ namespace BarberGo.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<T>> CreateEntity(T entity)
         {
-            await _genericRepositoryServices.CreateAsync(entity);
-            return Ok(entity);
+           var createdEntity =  await _genericRepositoryServices.CreateAsync(entity);
+            return Created("", createdEntity);
+
         }
         [HttpPut("update/{id}")]
         public async Task<ActionResult<T>> UpdateEntity(int id, T entity)
@@ -28,6 +29,13 @@ namespace BarberGo.Controllers
             entity.Id = id;
            await _genericRepositoryServices.UpdateAsync(entity);
             return Ok(entity);
+        }
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult<bool>> DeleteEntity(int id)
+        {
+            bool deleted = await _genericRepositoryServices.DeleteAsync(id);
+            return deleted ? NoContent() : NotFound();
+
         }
     }
 }
