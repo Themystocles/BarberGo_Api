@@ -66,6 +66,22 @@ namespace BarberGo.Services
 
 
         }
+        public async Task<bool> DeleteAsync(int id)
+        {
+            
+            if (id <= 0)
+            {
+                throw new ArgumentException($"O ID informado ({id}) é inválido. Certifique-se de fornecer um ID válido.");
+            }
+            var entity = await _genericRepository.GetByIdAsync(id);
+            if (entity == null)
+            {
+                throw new KeyNotFoundException($"Entidade com ID {id} não encontrada.");
+            }
+
+            return await _genericRepository.DeleteAsync(id);
+
+        }
 
     }
 }
