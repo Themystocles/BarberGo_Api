@@ -16,6 +16,20 @@ namespace BarberGo.Controllers
         {
             _genericRepositoryServices = genericRepositoryServices;
         }
+
+        [HttpGet]
+        public virtual async Task <ActionResult<List<T>>> GetAllEntities()
+        {
+            var entities = await _genericRepositoryServices.GetList();
+            return  Ok(entities);
+        }
+        // [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("find/{id}")]
+        public virtual async Task<ActionResult<T>> GetByIdAsync(int id)
+        {
+            var entityExist = await _genericRepositoryServices.GetByIdAsync(id);
+            return Ok(entityExist);
+        }
         [HttpPost("create")]
         public async Task<ActionResult<T>> CreateEntity(T entity)
         {
