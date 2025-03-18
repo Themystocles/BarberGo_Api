@@ -16,21 +16,20 @@ namespace BarberGo.Services
             _genericRepository = genericRepository;
             _mapper = mapper;
         }
+        public async Task<List<T>> GetList()
+        {
+            var entities = await _genericRepository.GetAllAsync();
+            return entities.ToList();
+        }
 
         public async Task<T> GetByIdAsync(int id)
         {
-            try
-            {
-                var entity = await _genericRepository.GetByIdAsync(id);
-                if (entity == null)
-                    throw new KeyNotFoundException($"Entidade com ID {id} não encontrada.");
+            var entity = await _genericRepository.GetByIdAsync(id);
 
-                return entity;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao buscar entidade por ID.", ex);
-            }
+            if (entity == null)
+                throw new KeyNotFoundException($"Entidade com ID {id} não encontrada.");
+
+            return entity;
         }
         public async Task<T> CreateAsync(T entity)
         {
