@@ -1,11 +1,13 @@
 ﻿
 using BarberGo.Interfaces;
 using BarberGo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace BarberGo.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class GenericRepositoryController<T> : ControllerBase where T : class, IEntity
