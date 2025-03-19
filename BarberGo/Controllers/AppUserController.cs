@@ -12,11 +12,11 @@ namespace BarberGo.Controllers
               : base(genericRepositoryServices)
         {
         }
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public override Task<ActionResult<List<AppUser>>> GetAllEntities()
-        {
-            return Task.FromResult<ActionResult<List<AppUser>>>(Forbid());
-        }
+       // [ApiExplorerSettings(IgnoreApi = true)]
+       // public override Task<ActionResult<List<AppUser>>> GetAllEntities()
+      //  {
+      //      return Task.FromResult<ActionResult<List<AppUser>>>(Forbid());
+      //  }
       //  [ApiExplorerSettings(IgnoreApi = true)]
         public override Task<ActionResult<AppUser>> GetByIdAsync(int id)
         {
