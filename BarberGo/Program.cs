@@ -23,6 +23,8 @@ namespace BarberGo
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
             builder.Services.AddScoped<TokenService>();
+            builder.Services.AddScoped<LoginServices>();
+            builder.Services.AddScoped<LoginUserRepository>();
 
             builder.Services.AddSwaggerGen(c =>
             {

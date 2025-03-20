@@ -1,30 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BarberGo.Entities;
+using BarberGo.Services;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly TokenService _tokenService;
+    private readonly LoginServices _loginServices;
 
-    public AuthController(TokenService tokenService)
+    public AuthController(LoginServices loginServices)
     {
-        _tokenService = tokenService;
+        _loginServices = loginServices;
     }
+
+
+
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginModel model)
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
-        if (model.Username == "admin" && model.Password == "123456")
+        var token = await _loginServices.LoginAppUser(model);
+
+        if (token == null)
         {
-            var token = _tokenService.GenerateToken(model.Username);
-            return Ok(new { Token = token });
+            return Unauthorized();
         }
-        return Unauthorized();
+
+        return Ok(new { Token = token });
     }
 }
 
-public class LoginModel
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
+
