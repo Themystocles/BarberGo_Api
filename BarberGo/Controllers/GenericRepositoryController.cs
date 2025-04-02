@@ -33,7 +33,7 @@ namespace BarberGo.Controllers
             return Ok(entityExist);
         }
         [HttpPost("create")]
-        public async Task<ActionResult<T>> CreateEntity(T entity)
+        public virtual async Task<ActionResult<T>> CreateEntity(T entity)
         {
            var createdEntity =  await _genericRepositoryServices.CreateAsync(entity);
             return Created("", createdEntity);
