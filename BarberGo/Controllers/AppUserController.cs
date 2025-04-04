@@ -2,6 +2,8 @@
 using BarberGo.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace BarberGo.Controllers
 {
@@ -10,9 +12,11 @@ namespace BarberGo.Controllers
     [Route("api/[controller]")]
     public class AppUserController : GenericRepositoryController<AppUser>
     {
-        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices)
+        private readonly LoginServices _loginServices;
+        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices)
               : base(genericRepositoryServices)
         {
+            _loginServices = loginServices;
         }
        // [ApiExplorerSettings(IgnoreApi = true)]
        // public override Task<ActionResult<List<AppUser>>> GetAllEntities()
@@ -30,6 +34,22 @@ namespace BarberGo.Controllers
         {
             var createdEntity = await _genericRepositoryServices.CreateAsync(entity);
             return Created("", createdEntity);
+        }
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var email = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(email))
+                return Unauthorized();
+
+            var user = await _loginServices.GetUserProfileByEmailAsync(email);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+
+            return Ok(user);
         }
 
     }
