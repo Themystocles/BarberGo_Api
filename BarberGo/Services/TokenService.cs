@@ -13,14 +13,15 @@ public class TokenService
         _config = config;
     }
 
-    public string GenerateToken(string username)
+    public string GenerateToken(string email)
     {
         var jwtSettings = _config.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, username),
+            
+            new Claim(ClaimTypes.Name, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
