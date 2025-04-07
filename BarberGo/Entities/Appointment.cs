@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using BarberGo.Interfaces;
+using Microsoft.AspNetCore.Routing;
 
 namespace BarberGo.Entities
 {
-    public class Appointment
+    public class Appointment : IEntity
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
@@ -12,9 +13,9 @@ namespace BarberGo.Entities
         public string Status { get; set; }
 
       
-        public AppUser Client { get; set; }
-        public Haircut Haircut { get; set; }
-        public AppUser Barber { get; set; }
+        public AppUser? Client { get; set; }
+        public Haircut? Haircut { get; set; }
+        public AppUser? Barber { get; set; }
     }
 
     }
