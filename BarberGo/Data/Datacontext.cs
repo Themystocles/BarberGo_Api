@@ -14,6 +14,7 @@ namespace BarberGo.Data
         public DbSet<Haircut> Haircuts { get; set; }
         public DbSet<Feedback> Feedback { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<WeeklySchedule> weeklySchedules { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

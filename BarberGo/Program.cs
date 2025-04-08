@@ -27,6 +27,8 @@ namespace BarberGo
             builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<LoginServices>();
             builder.Services.AddScoped<LoginUserRepository>();
+            builder.Services.AddScoped<IWeeklySchedule, WeeklyScheduleRepository>();
+
 
             // Configuração do Swagger com JWT
             builder.Services.AddSwaggerGen(c =>
