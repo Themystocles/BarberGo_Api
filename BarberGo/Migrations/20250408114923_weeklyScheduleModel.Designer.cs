@@ -4,6 +4,7 @@ using BarberGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberGo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250408114923_weeklyScheduleModel")]
+    partial class weeklyScheduleModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,36 +189,6 @@ namespace BarberGo.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("BarberGo.Entities.WeeklySchedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("BarberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<int>("IntervalMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BarberId");
-
-                    b.ToTable("weeklySchedules");
-                });
-
             modelBuilder.Entity("BarberGo.Entities.Appointment", b =>
                 {
                     b.HasOne("BarberGo.Entities.AppUser", "Barber")
@@ -279,15 +252,6 @@ namespace BarberGo.Migrations
                     b.Navigation("Appointment");
 
                     b.Navigation("Client");
-                });
-
-            modelBuilder.Entity("BarberGo.Entities.WeeklySchedule", b =>
-                {
-                    b.HasOne("BarberGo.Entities.AppUser", "Barber")
-                        .WithMany()
-                        .HasForeignKey("BarberId");
-
-                    b.Navigation("Barber");
                 });
 #pragma warning restore 612, 618
         }
