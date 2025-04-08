@@ -4,6 +4,7 @@ using BarberGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberGo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250408115401_CorrigindoWeklySchedule")]
+    partial class CorrigindoWeklySchedule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,7 +197,7 @@ namespace BarberGo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BarberId")
+                    b.Property<int>("BarberId")
                         .HasColumnType("int");
 
                     b.Property<int>("DayOfWeek")
@@ -285,7 +288,9 @@ namespace BarberGo.Migrations
                 {
                     b.HasOne("BarberGo.Entities.AppUser", "Barber")
                         .WithMany()
-                        .HasForeignKey("BarberId");
+                        .HasForeignKey("BarberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Barber");
                 });
