@@ -20,7 +20,7 @@ namespace BarberGo.Repositories
             var schedules = await _context.weeklySchedules
                 .Where(w => w.DayOfWeek == dayOfWeek && (barberId == null || w.BarberId == barberId))
                 .ToListAsync();
-
+           
             var appointments = await _context.Appointments
                 .Where(a => a.DateTime.Date == date.Date && (barberId == null || a.BarberId == barberId))
                 .Select(a => a.DateTime.TimeOfDay)
