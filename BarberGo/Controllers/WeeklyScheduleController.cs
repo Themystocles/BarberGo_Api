@@ -1,6 +1,7 @@
 ﻿using BarberGo.Entities;
 using BarberGo.Interfaces;
 using BarberGo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,14 @@ namespace BarberGo.Controllers
         {
             var result = await _weeklySchedule.GetAvailableSlotsAsync(date, barberId);
             return Ok(result);
+        }
+        [Authorize]
+        [HttpPost("create-weekly")]
+        public override async Task<ActionResult<WeeklySchedule>> CreateEntity(WeeklySchedule schedule)
+        {
+            _weeklySchedule.CreateNewSchedule(schedule);
+
+           return Ok(schedule);
         }
     }
 }
