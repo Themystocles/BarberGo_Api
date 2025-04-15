@@ -1,4 +1,5 @@
 ﻿using BarberGo.Data;
+using BarberGo.Entities;
 using BarberGo.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,27 @@ namespace BarberGo.Repositories
             }
 
             return availableSlots;
+        }
+
+        public async Task<WeeklySchedule> CreateNewSchedule(WeeklySchedule schedule)
+        {
+            var schedules = _context.weeklySchedules
+                .Where(w => w.DayOfWeek == schedule.DayOfWeek)
+                 .Where(w => schedule.StartTime < w.EndTime && schedule.EndTime > w.StartTime);
+            
+            if (schedules.Any())
+            {
+                throw new ArgumentException("Existem conflitos de horarios nesse dia");
+            }
+
+            _context.Add(schedule);
+            _context.SaveChanges();
+
+          
+
+
+            return schedule;
+
         }
     }
 }
