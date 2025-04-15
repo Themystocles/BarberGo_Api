@@ -29,7 +29,7 @@ namespace BarberGo.Controllers
             return Task.FromResult<ActionResult<AppUser>>(Unauthorized("Acesso negado. Você não tem permissão para executar esta ação."));
         }
         [HttpPost("create")]
-        [AllowAnonymous] // Apenas a criação de usuário é liberada
+        [AllowAnonymous] 
         public override async Task<ActionResult<AppUser>> CreateEntity(AppUser entity)
         {
             var createdEntity = await _genericRepositoryServices.CreateAsync(entity);
