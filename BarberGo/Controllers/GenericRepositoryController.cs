@@ -40,7 +40,7 @@ namespace BarberGo.Controllers
 
         }
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<T>> UpdateEntity(int id, T entity)
+        public virtual async Task<ActionResult<T>> UpdateEntity(int id, T entity)
         {
             entity.Id = id;
            await _genericRepositoryServices.UpdateAsync(entity);
