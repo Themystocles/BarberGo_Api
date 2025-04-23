@@ -27,9 +27,17 @@ namespace BarberGo.Controllers
         [HttpPost("create-weekly")]
         public override async Task<ActionResult<WeeklySchedule>> CreateEntity(WeeklySchedule schedule)
         {
-            _weeklySchedule.CreateNewSchedule(schedule);
+           await _weeklySchedule.CreateNewSchedule(schedule);
 
            return Ok(schedule);
+        }
+        [HttpPut("updateOv/{id}")]
+        public override async Task<ActionResult<WeeklySchedule>> UpdateEntity(int id, WeeklySchedule schedule)
+        {
+            schedule.Id = id;
+            await _weeklySchedule.UpdateScheduleAsync(schedule);
+
+            return Ok(schedule);
         }
     }
 }
