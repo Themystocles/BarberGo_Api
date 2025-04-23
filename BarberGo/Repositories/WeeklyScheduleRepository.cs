@@ -1,6 +1,8 @@
-﻿using BarberGo.Data;
+﻿using AutoMapper;
+using BarberGo.Data;
 using BarberGo.Entities;
 using BarberGo.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarberGo.Repositories
@@ -8,10 +10,12 @@ namespace BarberGo.Repositories
     public class WeeklyScheduleRepository : IWeeklySchedule
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public WeeklyScheduleRepository(DataContext context)
+        public WeeklyScheduleRepository(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<List<DateTime>> GetAvailableSlotsAsync(DateTime date, int? barberId = null)
@@ -64,6 +68,38 @@ namespace BarberGo.Repositories
 
 
             return schedule;
+
+        }
+
+        public async Task<WeeklySchedule> UpdateScheduleAsync(WeeklySchedule schedule)
+        {
+            if (schedule == null)
+            {
+                throw new ArgumentNullException(nameof(schedule));
+            }
+            var conflict = _context.weeklySchedules
+                .Where(w => w.DayOfWeek == schedule.DayOfWeek && w.Id != schedule.Id)
+                 .Where(w => schedule.StartTime < w.EndTime && schedule.EndTime > w.StartTime);
+            if (conflict.Any())
+            {
+                throw new ArgumentException("Existem conflitos de horarios nesse dia");
+            }
+
+            var scheduleExist = await _context.weeklySchedules.FindAsync(schedule.Id);
+            if (scheduleExist == null)
+            { 
+                throw new ArgumentNullException(nameof(scheduleExist));
+            }
+            _mapper.Map(schedule, scheduleExist);
+
+             _context.Update(scheduleExist);
+              await _context.SaveChangesAsync();
+
+
+            return scheduleExist;
+
+
+
 
         }
     }

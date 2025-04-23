@@ -7,5 +7,7 @@ namespace BarberGo.Interfaces
         Task<List<DateTime>> GetAvailableSlotsAsync(DateTime date, int? barberId = null);
 
         Task<WeeklySchedule> CreateNewSchedule(WeeklySchedule schedule);
+
+        Task<WeeklySchedule> UpdateScheduleAsync(WeeklySchedule schedule);
     }
 }
