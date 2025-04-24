@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BarberGo.Data;
 using BarberGo.Entities;
+using BarberGo.Entities.DTOs;
 using BarberGo.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -18,16 +19,16 @@ namespace BarberGo.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<DateTime>> GetAvailableSlotsAsync(DateTime date, int? barberId = null)
+        public async Task<List<DateTime>> GetAvailableSlotsAsync(DateTime date, int? barberId = 6)
         {
             var dayOfWeek = date.DayOfWeek;
 
             var schedules = await _context.weeklySchedules
-                .Where(w => w.DayOfWeek == dayOfWeek && (barberId == null || w.BarberId == barberId))
+                .Where(w => w.DayOfWeek == dayOfWeek && w.BarberId == barberId)
                 .ToListAsync();
            
             var appointments = await _context.Appointments
-                .Where(a => a.DateTime.Date == date.Date && (barberId == null || a.BarberId == barberId))
+                .Where(a => a.DateTime.Date == date.Date &&  a.BarberId == barberId)
                 .Select(a => a.DateTime.TimeOfDay)
                 .ToListAsync();
 
@@ -102,5 +103,21 @@ namespace BarberGo.Repositories
 
 
         }
+        public async Task<List<BarberDto>> GetUserForType()
+        {
+            var barbers = await _context.AppUsers
+                .Where(t => t.Type == TipoUsuario.Administrator)
+                .Select(t => new BarberDto
+                {
+                    Id = t.Id,
+                    Name = t.Name  
+                })
+                .ToListAsync();
+
+
+            return barbers;
+        }
+
+      
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BarberGo.Entities;
+using BarberGo.Entities.DTOs;
 
 namespace BarberGo.Interfaces
 {
@@ -9,5 +10,7 @@ namespace BarberGo.Interfaces
         Task<WeeklySchedule> CreateNewSchedule(WeeklySchedule schedule);
 
         Task<WeeklySchedule> UpdateScheduleAsync(WeeklySchedule schedule);
+
+        Task <List<BarberDto>> GetUserForType();
     }
 }
