@@ -1,4 +1,5 @@
 ﻿using BarberGo.Entities;
+using BarberGo.Entities.DTOs;
 using BarberGo.Interfaces;
 using BarberGo.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +39,16 @@ namespace BarberGo.Controllers
             await _weeklySchedule.UpdateScheduleAsync(schedule);
 
             return Ok(schedule);
+        }
+        [HttpGet("barbers")]
+        public async Task <ActionResult<List<BarberDto>>> GetUserForType()
+        {
+
+            var barbers = await _weeklySchedule.GetUserForType();
+
+            return Ok(barbers); 
+ 
+
         }
     }
 }
