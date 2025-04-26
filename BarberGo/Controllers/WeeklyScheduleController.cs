@@ -18,6 +18,15 @@ namespace BarberGo.Controllers
         {
             _weeklySchedule = weeklySchedule;
         }
+
+        [HttpGet("weeklySchedule/{barberId}")]
+        public async Task<ActionResult<List<WeeklySchedule>>> GetAllEntities(int barberId)
+        {
+            
+
+            var week = await _weeklySchedule.GetWeeklyScheduleByBarberId(barberId);
+            return Ok(week);
+        }
         [HttpGet("available-slots")]
         public async Task<IActionResult> GetAvailableSlots([FromQuery] DateTime date, [FromQuery] int? barberId)
         {
