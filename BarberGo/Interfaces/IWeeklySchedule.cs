@@ -12,5 +12,7 @@ namespace BarberGo.Interfaces
         Task<WeeklySchedule> UpdateScheduleAsync(WeeklySchedule schedule);
 
         Task <List<BarberDto>> GetUserForType();
+
+        Task <List <WeeklySchedule>> GetWeeklyScheduleByBarberId(int BarberId);
     }
 }

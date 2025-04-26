@@ -54,7 +54,7 @@ namespace BarberGo.Repositories
         public async Task<WeeklySchedule> CreateNewSchedule(WeeklySchedule schedule)
         {
             var schedules = _context.weeklySchedules
-                .Where(w => w.DayOfWeek == schedule.DayOfWeek)
+                .Where(w => w.DayOfWeek == schedule.DayOfWeek && w.BarberId == schedule.BarberId)
                  .Where(w => schedule.StartTime < w.EndTime && schedule.EndTime > w.StartTime);
             
             if (schedules.Any())
@@ -75,34 +75,37 @@ namespace BarberGo.Repositories
         public async Task<WeeklySchedule> UpdateScheduleAsync(WeeklySchedule schedule)
         {
             if (schedule == null)
-            {
                 throw new ArgumentNullException(nameof(schedule));
-            }
-            var conflict = _context.weeklySchedules
-                .Where(w => w.DayOfWeek == schedule.DayOfWeek && w.Id != schedule.Id)
-                 .Where(w => schedule.StartTime < w.EndTime && schedule.EndTime > w.StartTime);
-            if (conflict.Any())
+
+            var conflict = await _context.weeklySchedules
+                .Where(w => w.DayOfWeek == schedule.DayOfWeek
+                            && w.BarberId == schedule.BarberId
+                            && w.Id != schedule.Id)
+                .Where(w => w.StartTime < schedule.EndTime && w.EndTime > schedule.StartTime)
+                .AnyAsync();
+
+            if (conflict)
             {
-                throw new ArgumentException("Existem conflitos de horarios nesse dia");
+                throw new ArgumentException("Existem conflitos de horários nesse dia");
             }
 
             var scheduleExist = await _context.weeklySchedules.FindAsync(schedule.Id);
             if (scheduleExist == null)
-            { 
                 throw new ArgumentNullException(nameof(scheduleExist));
-            }
-            _mapper.Map(schedule, scheduleExist);
 
-             _context.Update(scheduleExist);
-              await _context.SaveChangesAsync();
+            // Atualizar manualmente os campos
+            scheduleExist.StartTime = schedule.StartTime;
+            scheduleExist.EndTime = schedule.EndTime;
+            scheduleExist.IntervalMinutes = schedule.IntervalMinutes;
+            scheduleExist.DayOfWeek = schedule.DayOfWeek;
+            // atualize aqui o que for permitido
 
+            _context.Update(scheduleExist);
+            await _context.SaveChangesAsync();
 
             return scheduleExist;
-
-
-
-
         }
+
         public async Task<List<BarberDto>> GetUserForType()
         {
             var barbers = await _context.AppUsers
@@ -118,6 +121,13 @@ namespace BarberGo.Repositories
             return barbers;
         }
 
-      
+        public async Task<List<WeeklySchedule>> GetWeeklyScheduleByBarberId(int BarberId)
+        {
+            var Weekly = await _context.weeklySchedules
+                .Where(b => b.BarberId == BarberId)
+                .ToListAsync();
+
+            return Weekly;
+        }
     }
 }
