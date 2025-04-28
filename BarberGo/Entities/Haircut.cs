@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BarberGo.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarberGo.Entities
 {
-    public class Haircut
+    public class Haircut : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
