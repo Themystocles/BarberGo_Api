@@ -30,6 +30,8 @@ public class AppointmentController : ControllerBase
         var entities = await _service.GetList();
         return Ok(entities);
     }
+  
+
 
     [HttpGet("find/{id}")]
     public async Task<IActionResult> GetById(int id)
