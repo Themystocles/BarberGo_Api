@@ -10,5 +10,10 @@ namespace BarberGo.Entities
         [Precision(18, 2)]
         public decimal Preco { get; set; }
         public TimeSpan Duracao { get; set; }
+
+        public string? ImagePath { get; set; }
+
+
+
     }
 }
