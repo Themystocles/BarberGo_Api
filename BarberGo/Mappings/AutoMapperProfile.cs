@@ -17,6 +17,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<WeeklySchedule, WeeklySchedule>()
     .ForMember(dest => dest.Id, opt => opt.Ignore()) 
-    .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null)); 
+    .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+        CreateMap<Haircut, Haircut>();
     }
 }
