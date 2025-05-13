@@ -1,8 +1,10 @@
 ﻿using BarberGo.Entities;
 using BarberGo.Interfaces;
 using BarberGo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Data;
 
 namespace BarberGo.Controllers
 {
@@ -16,7 +18,7 @@ namespace BarberGo.Controllers
         {
             _todaysCustomers = todaysCustomers;
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpGet("ClientesDoDia/{barberid}")]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetCustomersOfTheDay(int barberid, [FromQuery] DateTime date)
         {

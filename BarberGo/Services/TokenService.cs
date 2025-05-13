@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BarberGo.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,7 +14,7 @@ public class TokenService
         _config = config;
     }
 
-    public string GenerateToken(string email)
+    public string GenerateToken(string email, TipoUsuario tipoUsuario)
     {
         var jwtSettings = _config.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
@@ -22,6 +23,7 @@ public class TokenService
         {
             
             new Claim(ClaimTypes.Name, email),
+            new Claim(ClaimTypes.Role, tipoUsuario.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

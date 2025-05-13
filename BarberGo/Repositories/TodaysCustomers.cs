@@ -22,7 +22,8 @@ namespace BarberGo.Repositories
              .Include(a => a.Haircut)
              .Where(a => a.BarberId == barberid && a.DateTime.Date == date.Date)
              .Select(a => new CustomerOfTheDayDto
-        {
+        { 
+              id = a.Id,
               ClientName = a.Client.Name,
               ClientPhone = a.Client.Phone,
               HaircutName = a.Haircut.Name,

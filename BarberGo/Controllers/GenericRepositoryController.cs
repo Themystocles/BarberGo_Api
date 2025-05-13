@@ -47,7 +47,7 @@ namespace BarberGo.Controllers
             return Ok(entity);
         }
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<bool>> DeleteEntity(int id)
+        public virtual async Task<ActionResult<bool>> DeleteEntity(int id)
         {
             bool deleted = await _genericRepositoryServices.DeleteAsync(id);
             return deleted ? NoContent() : NotFound();

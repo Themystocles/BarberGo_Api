@@ -21,7 +21,7 @@ namespace BarberGo.Services
             {
                 return null;
             }
-            return _tokenService.GenerateToken(user.Email);
+            return _tokenService.GenerateToken(user.Email, user.Type);
         }
         public async Task<AppUser?> GetUserProfileByEmailAsync(string email)
         {
