@@ -3,6 +3,7 @@
     
    public class CustomerOfTheDayDto
     {
+        public int id { get; set; } 
         public string ClientName { get; set; }
         public string ClientPhone { get; set; }
         public string HaircutName { get; set; }
