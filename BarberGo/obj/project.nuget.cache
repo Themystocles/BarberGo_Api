@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "obeqR0RZBMxq2AGQn1zR/eVsQsxI3+9gLu/HW4+d77fYERfv80eyAHu3JJCwCDq1aCpIQorGws00Oij/b9M4iQ==",
+  "dgSpecHash": "hign3CQIXZVEyzg3iLxVCIz6/1HemP95jGy3qd75gvuZV6EJfwILvO1wwaJ9kaV9bR9QiqRF9zFOFn6QgZP4Gg==",
   "success": true,
   "projectFilePath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\BarberGo.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\themy\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\themy\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\themy\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\themy\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\7.0.0\\microsoft.aspnetcore.authentication.google.7.0.0.nupkg.sha512",
     "C:\\Users\\themy\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.20\\microsoft.aspnetcore.authentication.jwtbearer.7.0.20.nupkg.sha512",
     "C:\\Users\\themy\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.9\\microsoft.aspnetcore.openapi.7.0.9.nupkg.sha512",
     "C:\\Users\\themy\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",

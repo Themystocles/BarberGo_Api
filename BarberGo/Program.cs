@@ -7,6 +7,11 @@ using BarberGo.Repositories;
 using BarberGo.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication; 
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+
 
 namespace BarberGo
 {
@@ -29,7 +34,6 @@ namespace BarberGo
             builder.Services.AddScoped<LoginUserRepository>();
             builder.Services.AddScoped<IWeeklySchedule, WeeklyScheduleRepository>();
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
-
 
             // Configuração do Swagger com JWT
             builder.Services.AddSwaggerGen(c =>
@@ -59,24 +63,40 @@ namespace BarberGo
                 });
             });
 
-            // Configuração da autenticação JWT
+            // Configuração da autenticação JWT + Google
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+
+               
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSettings["Issuer"],
-                        ValidAudience = jwtSettings["Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(key)
-                    };
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            })
+            .AddCookie() 
+            .AddCookie("External")
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                googleOptions.CallbackPath = "/signin-google";
+            });
 
             // Configuração do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -105,10 +125,10 @@ namespace BarberGo
             }
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseHttpsRedirection();
 
             app.UseHttpsRedirection();
 
-            // Aplicar CORS antes de autenticação/autorização
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthentication();
