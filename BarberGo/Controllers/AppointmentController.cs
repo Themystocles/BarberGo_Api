@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using BarberGo.DTOs;
 using BarberGo.Entities;
+using BarberGo.Entities.DTOs;
+using BarberGo.Interfaces;
+using BarberGo.Repositories;
 using BarberGo.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,12 +12,14 @@ using Microsoft.AspNetCore.Mvc;
 public class AppointmentController : ControllerBase
 {
     private readonly GenericRepositoryServices<Appointment> _service;
+    private readonly IAppointmentRepository _repository;
     private readonly IMapper _mapper;
 
-    public AppointmentController(GenericRepositoryServices<Appointment> service, IMapper mapper)
+    public AppointmentController(GenericRepositoryServices<Appointment> service, IMapper mapper, IAppointmentRepository repository)
     {
         _service = service;
         _mapper = mapper;
+        _repository = repository;
     }
 
     [HttpPost("create")]
@@ -34,12 +39,20 @@ public class AppointmentController : ControllerBase
 
 
     [HttpGet("find/{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<ActionResult<Appointment>> GetById(int id)
     {
         var entity = await _service.GetByIdAsync(id);
         return Ok(entity);
     }
-   
+    [HttpGet("appointments/{iduser}")]
+    public async Task <ActionResult<IEnumerable<MyAppointmentDto>>> GetAppointmenteByIdUser(int iduser)
+    {
+        var Appointment = await _repository.GetAppointmentsByUserId(iduser);
+
+        return Ok(Appointment);
+    }
+
+
     [HttpPut("update/{id}")]
     public async Task<IActionResult> Update(int id, AppointmentDto dto)
     {
