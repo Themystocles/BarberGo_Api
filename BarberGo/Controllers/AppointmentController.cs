@@ -51,6 +51,13 @@ public class AppointmentController : ControllerBase
 
         return Ok(Appointment);
     }
+    [HttpGet("Historyappointments/{iduser}")]
+    public async Task<ActionResult<IEnumerable<MyAppointmentDto>>> GetHistorybyDateAndId(int iduser,[FromQuery] DateTime? date)
+    {
+        var Appointment = await _repository.GetHistoryAppointment(iduser, date);
+
+        return Ok(Appointment);
+    }
 
 
     [HttpPut("update/{id}")]

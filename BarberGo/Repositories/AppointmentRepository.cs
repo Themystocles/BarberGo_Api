@@ -41,5 +41,37 @@ namespace BarberGo.Repositories
 
 
         }
+
+        public async Task<List<MyAppointmentDto>> GetHistoryAppointment(int idUser, DateTime? date = null)
+        {
+            var query = _dataContext.Appointments
+                .Where(a => a.ClientId == idUser && a.DateTime < DateTime.Now)
+                .Include(a => a.Client)
+                .Include(a => a.Barber)
+                .Include(a => a.Haircut)
+                .AsQueryable();
+
+            if (date.HasValue)
+            {
+               
+                query = query.Where(a => a.DateTime.Date == date.Value.Date);
+            }
+
+            return await query
+                .Select(a => new MyAppointmentDto
+                {
+                    id = a.Id,
+                    ClientName = a.Client.Name,
+                    ClientPhone = a.Client.Phone,
+                    HaircutName = a.Haircut.Name,
+                    HaircutPreco = a.Haircut.Preco,
+                    BarberName = a.Barber.Name,
+                    DateTime = a.DateTime,
+                    Status = a.Status
+                })
+                .ToListAsync();
+        }
+
+       
     }
 }
