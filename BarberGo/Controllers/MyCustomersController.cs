@@ -22,6 +22,7 @@ namespace BarberGo.Controllers
         [HttpGet("ClientesDoDia/{barberid}")]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetCustomersOfTheDay(int barberid, [FromQuery] DateTime date)
         {
+            
 
             var entities = await _todaysCustomers.MyCustomersOfTheDay(date, barberid);
             return Ok(entities);

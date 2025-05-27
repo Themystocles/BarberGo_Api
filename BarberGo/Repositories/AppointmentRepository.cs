@@ -19,25 +19,25 @@ namespace BarberGo.Repositories
 
         public async Task<List<MyAppointmentDto>> GetAppointmentsByUserId(int idUser)
         {
-           return  await _dataContext.Appointments
-                .Where(a => a.ClientId == idUser && a.DateTime >= DateTime.Today)
-                .Include(a => a.Client)
-                .Include(a => a.Barber)
-                .Include(a => a.Haircut)
-                 .Select(a => new MyAppointmentDto
-                 {
-                     id = a.Id,
-                     ClientName = a.Client.Name,
-                     ClientPhone = a.Client.Phone,
-                     HaircutName = a.Haircut.Name,
-                     HaircutPreco = a.Haircut.Preco,
-                     BarberName = a.Barber.Name,
-                     DateTime = a.DateTime,
-                     Status = a.Status
-                 })
-                .ToListAsync();
+            return await _dataContext.Appointments
+                 .Where(a => a.ClientId == idUser && a.DateTime >= DateTime.Today)
+                 .Include(a => a.Client)
+                 .Include(a => a.Barber)
+                 .Include(a => a.Haircut)
+                  .Select(a => new MyAppointmentDto
+                  {
+                      id = a.Id,
+                      ClientName = a.Client.Name,
+                      ClientPhone = a.Client.Phone,
+                      HaircutName = a.Haircut.Name,
+                      HaircutPreco = a.Haircut.Preco,
+                      BarberName = a.Barber.Name,
+                      DateTime = a.DateTime,
+                      Status = a.Status
+                  })
+                 .ToListAsync();
 
-                
+
 
 
         }
@@ -53,7 +53,7 @@ namespace BarberGo.Repositories
 
             if (date.HasValue)
             {
-               
+
                 query = query.Where(a => a.DateTime.Date == date.Value.Date);
             }
 
@@ -72,6 +72,6 @@ namespace BarberGo.Repositories
                 .ToListAsync();
         }
 
-       
+
     }
 }

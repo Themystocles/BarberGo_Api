@@ -19,14 +19,16 @@ namespace BarberGo.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<DateTime>> GetAvailableSlotsAsync(DateTime date, int? barberId = 6)
+        public async Task<List<DateTime>> GetAvailableSlotsAsync(DateTime date, int? barberId)
         {
             var dayOfWeek = date.DayOfWeek;
 
             var schedules = await _context.weeklySchedules
                 .Where(w => w.DayOfWeek == dayOfWeek && w.BarberId == barberId)
                 .ToListAsync();
-           
+
+            date = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
+
             var appointments = await _context.Appointments
                 .Where(a => a.DateTime.Date == date.Date &&  a.BarberId == barberId)
                 .Select(a => a.DateTime.TimeOfDay)
@@ -53,6 +55,7 @@ namespace BarberGo.Repositories
 
         public async Task<WeeklySchedule> CreateNewSchedule(WeeklySchedule schedule)
         {
+
             var schedules = _context.weeklySchedules
                 .Where(w => w.DayOfWeek == schedule.DayOfWeek && w.BarberId == schedule.BarberId)
                  .Where(w => schedule.StartTime < w.EndTime && schedule.EndTime > w.StartTime);
@@ -64,7 +67,7 @@ namespace BarberGo.Repositories
 
             _context.Add(schedule);
             _context.SaveChanges();
-
+ 
           
 
 

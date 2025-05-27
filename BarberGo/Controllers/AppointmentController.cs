@@ -26,6 +26,10 @@ public class AppointmentController : ControllerBase
     public async Task<IActionResult> Create(AppointmentDto dto)
     {
         var entity = _mapper.Map<Appointment>(dto);
+
+        // Garante que o DateTime está em UTC
+      //  entity.DateTime = entity.DateTime.ToUniversalTime();
+
         var result = await _service.CreateAsync(entity);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
