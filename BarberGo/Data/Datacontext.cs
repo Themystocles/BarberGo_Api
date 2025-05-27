@@ -1,6 +1,7 @@
 ﻿using BarberGo.Entities;
 using BarberGo.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BarberGo.Data
 {
@@ -16,20 +17,20 @@ namespace BarberGo.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<WeeklySchedule> weeklySchedules { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configura relacionamentos
             modelBuilder.Entity<Appointment>()
-       .HasOne(a => a.Client)
-       .WithMany()
-       .HasForeignKey(a => a.ClientId)
-       .OnDelete(DeleteBehavior.NoAction);
+                .HasOne(a => a.Client)
+                .WithMany()
+                .HasForeignKey(a => a.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-         modelBuilder.Entity<Appointment>()
-        .HasOne(a => a.Barber)
-           .WithMany()
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Barber)
+                .WithMany()
                 .HasForeignKey(a => a.BarberId)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -39,8 +40,13 @@ namespace BarberGo.Data
                 .HasForeignKey(a => a.HaircutId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-
-
+            // Define que o DateTime será salvo como timestamp without time zone
+            modelBuilder.Entity<Appointment>()
+                .Property(a => a.DateTime)  // substitua "DateTime" pelo nome exato da propriedade
+                .HasColumnType("timestamp without time zone");
         }
+
+
+    
     }
 }
