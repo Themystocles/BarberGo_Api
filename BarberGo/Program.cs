@@ -72,10 +72,10 @@ namespace BarberGo
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  // Para validar JWT em endpoints protegidos
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;         // Quando precisa desafiar o usuário, usa Google
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; // O cookie para manter sessão
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;  // cookies
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;              // só para login externo
             })
+                .AddCookie()
              .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -89,14 +89,30 @@ namespace BarberGo
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             })
-            .AddCookie()
             
-           .AddGoogle(googleOptions =>
-           {
-               googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-               googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-               googleOptions.CallbackPath = "/signin-google"; // Mantém
-           });
+
+          .AddGoogle(googleOptions =>
+          {
+              googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+              googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+              googleOptions.CallbackPath = "/signin-google";
+
+              googleOptions.Events.OnRedirectToAuthorizationEndpoint = context =>
+              {
+                  var env = builder.Environment;
+
+                  // Corrige o domínio na URL de redirecionamento com base no ambiente
+                  var redirectUri = context.RedirectUri;
+
+                  if (env.IsDevelopment())
+                  {
+                      redirectUri = redirectUri.Replace("https://barbergo-api.onrender.com", "https://localhost:7032");
+                  }
+
+                  context.Response.Redirect(redirectUri);
+                  return Task.CompletedTask;
+              };
+          });
 
             // Configuração do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

@@ -6,6 +6,7 @@ using BarberGo.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System;
 using BarberGo.Data;
+using static System.Net.WebRequestMethods;
 
 [ApiController]
 [Route("auth")]
@@ -23,8 +24,12 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
-        var properties = new AuthenticationProperties { RedirectUri = "https://barbergo-api.onrender.com/signin-google" };
-        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        var props = new AuthenticationProperties
+        {
+            // simples: volta pro seu próprio endpoint de callback
+            RedirectUri = Url.Action(nameof(GoogleResponse), "AuthGoogle")
+        };
+        return Challenge(props, GoogleDefaults.AuthenticationScheme);
     }
 
     [HttpGet("/signin-google")]
