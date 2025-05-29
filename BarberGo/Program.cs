@@ -72,14 +72,11 @@ namespace BarberGo
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
-
-               
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  // Para validar JWT em endpoints protegidos
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;         // Quando precisa desafiar o usuário, usa Google
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; // O cookie para manter sessão
             })
-            .AddJwtBearer(options =>
+             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -92,14 +89,14 @@ namespace BarberGo
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             })
-            .AddCookie() 
-            .AddCookie("External")
-            .AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                googleOptions.CallbackPath = "/signin-google";
-            });
+            .AddCookie()
+            .AddCookie()
+           .AddGoogle(googleOptions =>
+           {
+               googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+               googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+               googleOptions.CallbackPath = "/signin-google"; // Mantém
+           });
 
             // Configuração do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
