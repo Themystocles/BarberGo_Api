@@ -23,8 +23,6 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
-        var redirectUrl = Url.Action(nameof(GoogleResponse));
-
         var properties = new AuthenticationProperties { RedirectUri = "/signin-google" };
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
@@ -32,7 +30,10 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("/signin-google")]
     public async Task<IActionResult> GoogleResponse()
     {
+        // Aqui você deve tentar autenticar no esquema do cookie, porque o middleware do Google no callback cria a identidade e a coloca no cookie
+
         var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
         if (!result.Succeeded)
             return BadRequest("Autenticação com Google falhou");
 
@@ -43,19 +44,17 @@ public class AuthGoogleController : ControllerBase
         if (string.IsNullOrEmpty(email))
             return BadRequest("Email não fornecido pelo Google.");
 
-        // Verifica se o usuário já existe
-        var usuario = _context.AppUsers.FirstOrDefault(u => u.Email == email);
+        // Resto do código de criar/consultar usuário e gerar token JWT
 
+        var usuario = _context.AppUsers.FirstOrDefault(u => u.Email == email);
         if (usuario == null)
         {
-            // Cria novo usuário com perfil padrão
             usuario = new AppUser
             {
                 Name = nome,
                 Email = email,
-                Type = TipoUsuario.Client // ou qualquer padrão
+                Type = TipoUsuario.Client
             };
-
             _context.AppUsers.Add(usuario);
             await _context.SaveChangesAsync();
         }
