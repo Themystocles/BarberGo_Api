@@ -24,12 +24,13 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
-        var props = new AuthenticationProperties
-        {
-            // simples: volta pro seu próprio endpoint de callback
-            RedirectUri = Url.Action(nameof(GoogleResponse), "AuthGoogle")
-        };
-        return Challenge(props, GoogleDefaults.AuthenticationScheme);
+        var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+        var redirectUri = isDevelopment
+            ? "https://localhost:7032/signin-google"
+            : "https://barbergo-api.onrender.com/signin-google";
+
+        var properties = new AuthenticationProperties { RedirectUri = redirectUri };
+        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
     [HttpGet("/signin-google")]
