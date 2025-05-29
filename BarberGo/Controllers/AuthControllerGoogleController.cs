@@ -28,7 +28,7 @@ public class AuthGoogleController : ControllerBase
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
-    [HttpGet("google-response")]
+    [HttpGet("/signin-google")]
     public async Task<IActionResult> GoogleResponse()
     {
         var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -61,7 +61,7 @@ public class AuthGoogleController : ControllerBase
 
         var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);
 
-        var frontendUrl = "http://localhost:5173/login-success";
+        var frontendUrl = "https://barbergo-ui.onrender.com/login-success";
         return Redirect($"{frontendUrl}?token={token}");
     }
 }
