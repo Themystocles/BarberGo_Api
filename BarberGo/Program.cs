@@ -72,11 +72,14 @@ namespace BarberGo
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;  // cookies
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;              // só para login externo
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+
+               
             })
-                .AddCookie()
-             .AddJwtBearer(options =>
+            .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -89,30 +92,14 @@ namespace BarberGo
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             })
-            
-
-          .AddGoogle(googleOptions =>
-          {
-              googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-              googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-              googleOptions.CallbackPath = "/signin-google";
-
-              googleOptions.Events.OnRedirectToAuthorizationEndpoint = context =>
-              {
-                  var env = builder.Environment;
-
-                  // Corrige o domínio na URL de redirecionamento com base no ambiente
-                  var redirectUri = context.RedirectUri;
-
-                  if (env.IsDevelopment())
-                  {
-                      redirectUri = redirectUri.Replace("https://barbergo-api.onrender.com", "https://localhost:7032");
-                  }
-
-                  context.Response.Redirect(redirectUri);
-                  return Task.CompletedTask;
-              };
-          });
+            .AddCookie() 
+            .AddCookie("External")
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                googleOptions.CallbackPath = "/signin-google";
+            });
 
             // Configuração do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
