@@ -7,9 +7,12 @@ using BarberGo.Repositories;
 using BarberGo.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication; 
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+
+
 
 namespace BarberGo
 {
@@ -19,7 +22,7 @@ namespace BarberGo
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             var builder = WebApplication.CreateBuilder(args);
-
+            
             // Configuração do DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -69,17 +72,12 @@ namespace BarberGo
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;        // Cookies como default
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;              // Challenge redireciona pro Google
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;       // JWT valida as APIs
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;   // Sign-in com cookies
-            })
-            .AddCookie()
-            .AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                googleOptions.CallbackPath = "/signin-google";
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+
+               
             })
             .AddJwtBearer(options =>
             {
@@ -93,6 +91,14 @@ namespace BarberGo
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
+            })
+            .AddCookie() 
+            .AddCookie("External")
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                googleOptions.CallbackPath = "/signin-google";
             });
 
             // Configuração do CORS
@@ -115,11 +121,15 @@ namespace BarberGo
             var app = builder.Build();
 
             // Configurar o pipeline HTTP
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseHttpsRedirection();
+
+          
 
             app.UseCors(MyAllowSpecificOrigins);
 
