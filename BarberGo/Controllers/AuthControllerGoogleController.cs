@@ -23,9 +23,9 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
-        var redirectUrl = "https://barbergo-api.onrender.com/signin-google";
+        var redirectUrl = Url.Action(nameof(GoogleResponse));
 
-        var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+        var properties = new AuthenticationProperties { RedirectUri = "/signin-google" };
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
