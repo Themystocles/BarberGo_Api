@@ -79,6 +79,14 @@ namespace BarberGo
 
                
             })
+                .AddCookie()
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                    googleOptions.CallbackPath = "/signin-google";
+                })
+
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
