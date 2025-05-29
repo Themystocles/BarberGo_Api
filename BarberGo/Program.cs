@@ -90,7 +90,7 @@ namespace BarberGo
                 };
             })
             .AddCookie()
-            .AddCookie()
+            
            .AddGoogle(googleOptions =>
            {
                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
