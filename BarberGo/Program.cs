@@ -120,7 +120,7 @@ namespace BarberGo
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
                 {
-                    policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173")
+                    policy.WithOrigins("https://barbergo-ui.onrender.com")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials(); // necessário para cookies
@@ -146,6 +146,7 @@ namespace BarberGo
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseHttpsRedirection();
+            app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
 
