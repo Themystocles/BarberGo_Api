@@ -144,7 +144,7 @@ namespace BarberGo
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.UseMiddleware<ErrorHandlerMiddleware>();
+           
             app.UseHttpsRedirection();
             app.UseRouting();
 
@@ -153,7 +153,10 @@ namespace BarberGo
             app.UseAuthentication();
             app.UseAuthorization();
 
+
             app.MapControllers();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.Run();
         }
