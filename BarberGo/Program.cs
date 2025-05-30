@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace BarberGo
 {
@@ -102,6 +103,15 @@ namespace BarberGo
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
                 googleOptions.CallbackPath = "/signin-google";
+
+                googleOptions.Events = new OAuthEvents
+                {
+                    OnRemoteFailure = context =>
+                    {
+                        Console.WriteLine("Erro no login externo: " + context.Failure?.Message);
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             // Configuração do CORS
@@ -121,6 +131,13 @@ namespace BarberGo
             builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
+            app.UseForwardedHeaders();
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.None,
+                Secure = CookieSecurePolicy.Always
+            });
 
             // 👇 Middleware para reconhecer headers de proxy (X-Forwarded-Proto)
             app.UseForwardedHeaders();
