@@ -85,6 +85,7 @@ public class AuthGoogleController : ControllerBase
                 IsPersistent = true,
                 ExpiresUtc = DateTime.UtcNow.AddHours(1)
             });
+        Console.WriteLine("✅ Cookie de autenticação criado com sucesso.");
 
         // Gera token JWT (opcional, se ainda quiser usá-lo)
         var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);

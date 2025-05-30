@@ -22,17 +22,17 @@ namespace BarberGo
 
             var builder = WebApplication.CreateBuilder(args);
 
-            // HTTPS e proxies (necessário para Render)
+            // Configurar proxies (Render exige isso para HTTPS correto)
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
 
-            // DbContext
+            // DbContext com Npgsql e connection string do appsettings ou environment variable
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Repositórios e serviços
+            // Serviços e repositórios
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
@@ -43,7 +43,7 @@ namespace BarberGo
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-            // Swagger com JWT
+            // Swagger com suporte a JWT Bearer
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -66,12 +66,12 @@ namespace BarberGo
                                 Id = "Bearer"
                             }
                         },
-                        Array.Empty<string>()
+                        new string[] { }
                     }
                 });
             });
 
-            // JWT + Google Login + Cookies
+            // JWT, Cookies e Google Authentication
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
@@ -98,6 +98,15 @@ namespace BarberGo
             {
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.Name = "BarberGo.Auth.Cookie";
+                options.LoginPath = "/auth/google-login";
+                options.AccessDeniedPath = "/auth/denied";
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
             })
             .AddGoogle(googleOptions =>
             {
@@ -108,13 +117,14 @@ namespace BarberGo
                 {
                     OnRemoteFailure = context =>
                     {
-                        Console.WriteLine("Erro no login externo: " + context.Failure?.Message);
+                        context.Response.Redirect("/auth/error?message=" + Uri.EscapeDataString(context.Failure?.Message ?? "Erro desconhecido"));
+                        context.HandleResponse();
                         return Task.CompletedTask;
                     }
                 };
             });
 
-            // CORS com cookies
+            // CORS para seu front-end
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
@@ -123,35 +133,43 @@ namespace BarberGo
                     policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
-                          .AllowCredentials(); // necessário para cookies
+                          .AllowCredentials();
                 });
             });
 
+            // Controllers e API Explorer
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
 
-            // Proxy e cookies
+            // Middleware ForwardedHeaders para Render
             app.UseForwardedHeaders();
 
+            // Política de cookies para HTTPS e SameSite
             app.UseCookiePolicy(new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.None,
                 Secure = CookieSecurePolicy.Always
             });
 
+            // Swagger UI
             app.UseSwagger();
             app.UseSwaggerUI();
 
+            // Seu middleware customizado para tratamento de erros (se existir)
             app.UseMiddleware<ErrorHandlerMiddleware>();
+
             app.UseHttpsRedirection();
 
+            // CORS
             app.UseCors(MyAllowSpecificOrigins);
 
+            // Autenticação e autorização
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // Rotas
             app.MapControllers();
 
             app.Run();
