@@ -7,12 +7,10 @@ using BarberGo.Repositories;
 using BarberGo.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace BarberGo
 {
@@ -21,20 +19,20 @@ namespace BarberGo
         public static void Main(string[] args)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             var builder = WebApplication.CreateBuilder(args);
 
-            // Corrigir problemas de HTTPS com proxy (Render)
+            // HTTPS e proxies (necessário para Render)
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
-                // Exemplo (opcional): options.KnownProxies.Add(IPAddress.Parse("IP_DA_RENDER"));
             });
 
-            // Configuração do DbContext
+            // DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Configuração dos serviços
+            // Repositórios e serviços
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
@@ -45,7 +43,7 @@ namespace BarberGo
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-            // Configuração do Swagger com JWT
+            // Swagger com JWT
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -73,7 +71,7 @@ namespace BarberGo
                 });
             });
 
-            // Configuração da autenticação JWT + Google
+            // JWT + Google Login + Cookies
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
@@ -96,8 +94,7 @@ namespace BarberGo
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             })
-            .AddCookie()
-            .AddCookie("External", options =>
+            .AddCookie(options =>
             {
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.SameSite = SameSiteMode.None;
@@ -107,7 +104,6 @@ namespace BarberGo
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
                 googleOptions.CallbackPath = "/auth/signin-google";
-
                 googleOptions.Events = new OAuthEvents
                 {
                     OnRemoteFailure = context =>
@@ -118,23 +114,25 @@ namespace BarberGo
                 };
             });
 
-            // Configuração do CORS
+            // CORS com cookies
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                    policy =>
-                    {
-                        policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173")
-                              .AllowAnyHeader()
-                              .AllowAnyMethod();
-                    });
+                options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
+                {
+                    policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials(); // necessário para cookies
+                });
             });
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
+
+            // Proxy e cookies
             app.UseForwardedHeaders();
 
             app.UseCookiePolicy(new CookiePolicyOptions
@@ -142,9 +140,6 @@ namespace BarberGo
                 MinimumSameSitePolicy = SameSiteMode.None,
                 Secure = CookieSecurePolicy.Always
             });
-
-            // 👇 Middleware para reconhecer headers de proxy (X-Forwarded-Proto)
-            app.UseForwardedHeaders();
 
             app.UseSwagger();
             app.UseSwaggerUI();
