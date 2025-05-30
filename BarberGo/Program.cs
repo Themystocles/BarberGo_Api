@@ -1,4 +1,4 @@
-using System.Text;
+ï»¿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using BarberGo.Data;
@@ -7,12 +7,11 @@ using BarberGo.Repositories;
 using BarberGo.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication; 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
-
-
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace BarberGo
 {
@@ -22,12 +21,19 @@ namespace BarberGo
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             var builder = WebApplication.CreateBuilder(args);
-            
-            // Configuração do DbContext
+
+            // Corrigir problemas de HTTPS com proxy (Render)
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+                // Exemplo (opcional): options.KnownProxies.Add(IPAddress.Parse("IP_DA_RENDER"));
+            });
+
+            // ConfiguraÃ§Ã£o do DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Configuração dos serviços
+            // ConfiguraÃ§Ã£o dos serviÃ§os
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
@@ -38,12 +44,12 @@ namespace BarberGo
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-            // Configuração do Swagger com JWT
+            // ConfiguraÃ§Ã£o do Swagger com JWT
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "Autenticação JWT usando Bearer. Exemplo: 'Bearer seu_token_aqui'",
+                    Description = "AutenticaÃ§Ã£o JWT usando Bearer. Exemplo: 'Bearer seu_token_aqui'",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
@@ -66,7 +72,7 @@ namespace BarberGo
                 });
             });
 
-            // Configuração da autenticação JWT + Google
+            // ConfiguraÃ§Ã£o da autenticaÃ§Ã£o JWT + Google
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
@@ -75,9 +81,6 @@ namespace BarberGo
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
-
-               
             })
             .AddJwtBearer(options =>
             {
@@ -92,7 +95,7 @@ namespace BarberGo
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             })
-            .AddCookie() 
+            .AddCookie()
             .AddCookie("External")
             .AddGoogle(googleOptions =>
             {
@@ -101,35 +104,32 @@ namespace BarberGo
                 googleOptions.CallbackPath = "/signin-google";
             });
 
-            // Configuração do CORS
+            // ConfiguraÃ§Ã£o do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
                     policy =>
                     {
-                        policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173") 
+                        policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173")
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
             });
 
-            // Adicionar serviços ao container
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
 
-            // Configurar o pipeline HTTP
-            
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            
+            // ðŸ‘‡ Middleware para reconhecer headers de proxy (X-Forwarded-Proto)
+            app.UseForwardedHeaders();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseHttpsRedirection();
-
-          
 
             app.UseCors(MyAllowSpecificOrigins);
 
