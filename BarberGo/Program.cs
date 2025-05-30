@@ -71,15 +71,19 @@ namespace BarberGo
                 });
             });
 
-            // JWT, Cookies e Google Authentication
+            // JWT Settings
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
+            // Configuração da autenticação corrigida
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                // Use Cookie para autenticar e fazer sign-in
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+                // Use Google para desafio (challenge)
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -96,12 +100,15 @@ namespace BarberGo
             })
             .AddCookie(options =>
             {
+                // Se for ambiente de produção use Always, se for local, pode usar None
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Name = "BarberGo.Auth.Cookie";
+
                 options.LoginPath = "/auth/google-login";
                 options.AccessDeniedPath = "/auth/denied";
+
                 options.Events.OnRedirectToLogin = context =>
                 {
                     context.Response.StatusCode = 401;
