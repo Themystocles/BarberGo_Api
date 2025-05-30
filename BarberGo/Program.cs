@@ -106,7 +106,7 @@ namespace BarberGo
             {
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                googleOptions.CallbackPath = "/signin-google";
+                googleOptions.CallbackPath = "/auth/signin-google";
 
                 googleOptions.Events = new OAuthEvents
                 {

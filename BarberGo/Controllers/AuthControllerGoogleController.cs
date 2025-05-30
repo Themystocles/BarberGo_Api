@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BarberGo.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System;
 using BarberGo.Data;
-using static System.Net.WebRequestMethods;
 
 [ApiController]
 [Route("auth")]
@@ -21,27 +19,32 @@ public class AuthGoogleController : ControllerBase
         _context = context;
     }
 
+    // Inicia o login via Google, redireciona para o Google com callback configurado
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
         var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+
+        // Ajuste a URL para a rota correta do seu controller
         var redirectUri = isDevelopment
-            ? "https://localhost:7032/signin-google"
-            : "https://barbergo-api.onrender.com/signin-google";
+            ? "https://localhost:7032/auth/signin-google"
+            : "https://barbergo-api.onrender.com/auth/signin-google";
 
         var properties = new AuthenticationProperties { RedirectUri = redirectUri };
+
+        // Inicia o desafio de autenticação via Google
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
-    [HttpGet("/signin-google")]
+    // Callback que o Google chama após autenticação do usuário
+    [HttpGet("signin-google")]
     public async Task<IActionResult> GoogleResponse()
     {
-        // Aqui você deve tentar autenticar no esquema do cookie, porque o middleware do Google no callback cria a identidade e a coloca no cookie
-
+        // Tenta autenticar a identidade que o middleware do Google criou no cookie
         var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         if (!result.Succeeded)
-            return BadRequest("Autenticação com Google falhou");
+            return BadRequest("Falha na autenticação via Google.");
 
         var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
         var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -50,8 +53,7 @@ public class AuthGoogleController : ControllerBase
         if (string.IsNullOrEmpty(email))
             return BadRequest("Email não fornecido pelo Google.");
 
-        // Resto do código de criar/consultar usuário e gerar token JWT
-
+        // Verifica se o usuário já existe no banco
         var usuario = _context.AppUsers.FirstOrDefault(u => u.Email == email);
         if (usuario == null)
         {
@@ -59,15 +61,20 @@ public class AuthGoogleController : ControllerBase
             {
                 Name = nome,
                 Email = email,
-                Type = TipoUsuario.Client
+                Type = TipoUsuario.Client // Ajuste conforme sua enumeração ou lógica de tipos
             };
             _context.AppUsers.Add(usuario);
             await _context.SaveChangesAsync();
         }
 
+        // Gera token JWT para o usuário autenticado
         var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);
 
-        var frontendUrl = "https://barbergo-ui.onrender.com/login-success";
+        // Redireciona para o frontend com o token na query string
+        var frontendUrl = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
+            ? "http://localhost:5173/login-success"
+            : "https://barbergo-ui.onrender.com/login-success";
+
         return Redirect($"{frontendUrl}?token={token}");
     }
 }
