@@ -7,11 +7,12 @@ using BarberGo.Repositories;
 using BarberGo.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication; 
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+
+
 
 namespace BarberGo
 {
@@ -20,20 +21,13 @@ namespace BarberGo
         public static void Main(string[] args)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
             var builder = WebApplication.CreateBuilder(args);
-
-            // Configurar proxies (Render exige isso para HTTPS correto)
-            builder.Services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
-            });
-
-            // DbContext com Npgsql
+            
+            // Configuração do DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Repositórios e serviços
+            // Configuração dos serviços
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
@@ -44,7 +38,7 @@ namespace BarberGo
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-            // Swagger com JWT Bearer
+            // Configuração do Swagger com JWT
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -67,24 +61,23 @@ namespace BarberGo
                                 Id = "Bearer"
                             }
                         },
-                        new string[] { }
+                        Array.Empty<string>()
                     }
                 });
             });
 
-            // JWT Settings
+            // Configuração da autenticação JWT + Google
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
-            // Configuração da autenticação corrigida
             builder.Services.AddAuthentication(options =>
             {
-                // Use Cookie para autenticar e fazer sign-in
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
-                // Use Google para desafio (challenge)
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+
+               
             })
             .AddJwtBearer(options =>
             {
@@ -99,120 +92,50 @@ namespace BarberGo
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             })
-            .AddCookie(options =>
-            {
-                // Se for ambiente de produção use Always, se for local, pode usar None
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.Name = "BarberGo.Auth.Cookie";
-
-                options.LoginPath = "/auth/google-login";
-                options.AccessDeniedPath = "/auth/denied";
-
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    context.Response.StatusCode = 401;
-                    return Task.CompletedTask;
-                };
-            })
+            .AddCookie() 
+            .AddCookie("External")
             .AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                googleOptions.CallbackPath = "/auth/signin-google";
-                googleOptions.Events = new OAuthEvents
-                {
-                    OnRemoteFailure = context =>
-                    {
-                        var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
-                        logger.LogError(context.Failure, "Falha na autenticação Google OAuth");
-
-                        context.Response.Redirect("/auth/error?message=" + Uri.EscapeDataString(context.Failure?.Message ?? "Erro desconhecido"));
-                        context.HandleResponse();
-                        return Task.CompletedTask;
-                    },
-                    OnTicketReceived = context =>
-                    {
-                        var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
-                        logger.LogInformation("Google OAuth ticket recebido para usuário: {User}", context.Principal.Identity.Name);
-                        return Task.CompletedTask;
-                    },
-                    OnCreatingTicket = context =>
-                    {
-                        var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
-                        logger.LogInformation("Criando ticket OAuth para usuário: {User}", context.Principal.Identity.Name);
-                        return Task.CompletedTask;
-                    }
-                };
+                googleOptions.CallbackPath = "/signin-google";
             });
 
-            // CORS
+            // Configuração do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
-                {
-                    policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .AllowCredentials();
-                });
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    policy =>
+                    {
+                        policy.WithOrigins("https://barbergo-ui.onrender.com", "http://localhost:5173") 
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
             });
 
-            // Session e cache em memória
-            builder.Services.AddDistributedMemoryCache();
-            builder.Services.AddSession(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-
-            // Controllers e endpoints
+            // Adicionar serviços ao container
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
 
-            // Middleware: Proxies (Render)
-            app.UseForwardedHeaders();
+            // Configurar o pipeline HTTP
+            
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            
 
-            // Política de cookies
-            app.UseCookiePolicy(new CookiePolicyOptions
-            {
-                MinimumSameSitePolicy = SameSiteMode.None,
-                Secure = CookieSecurePolicy.Always
-            });
-
-            // Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
-            // Tratamento de erros
             app.UseMiddleware<ErrorHandlerMiddleware>();
-
-            // HTTPS
             app.UseHttpsRedirection();
 
-            // CORS
+          
+
             app.UseCors(MyAllowSpecificOrigins);
 
-            // Session
-            app.UseSession();
-
-            app.Use(async (context, next) =>
-            {
-                var logger = app.Services.GetRequiredService<ILogger<Program>>();
-                logger.LogInformation("Request: {Method} {Path}", context.Request.Method, context.Request.Path);
-                await next();
-                logger.LogInformation("Response Status: {StatusCode}", context.Response.StatusCode);
-            });
-
-            // Autenticação e autorização
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Controllers
             app.MapControllers();
 
             app.Run();
