@@ -40,7 +40,6 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("signin-google")]
     public async Task<IActionResult> GoogleResponse()
     {
-        // Tenta autenticar a identidade que o middleware do Google criou no cookie
         var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         if (!result.Succeeded)
@@ -61,16 +60,35 @@ public class AuthGoogleController : ControllerBase
             {
                 Name = nome,
                 Email = email,
-                Type = TipoUsuario.Client // Ajuste conforme sua enumeração ou lógica de tipos
+                Type = TipoUsuario.Client
             };
             _context.AppUsers.Add(usuario);
             await _context.SaveChangesAsync();
         }
 
-        // Gera token JWT para o usuário autenticado
+        // Cria nova identidade com Claims personalizadas
+        var identity = new ClaimsIdentity(new[]
+        {
+        new Claim(ClaimTypes.Name, nome),
+        new Claim(ClaimTypes.Email, email),
+        new Claim(ClaimTypes.Role, usuario.Type.ToString())
+    }, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var principal = new ClaimsPrincipal(identity);
+
+        // 👇 Cria o cookie de autenticação
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTime.UtcNow.AddHours(1)
+            });
+
+        // Gera token JWT (opcional, se ainda quiser usá-lo)
         var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);
 
-        // Redireciona para o frontend com o token na query string
         var frontendUrl = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
             ? "http://localhost:5173/login-success"
             : "https://barbergo-ui.onrender.com/login-success";
