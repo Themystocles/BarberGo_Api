@@ -96,4 +96,9 @@ public class AuthGoogleController : ControllerBase
 
         return Redirect($"{frontendUrl}?token={token}");
     }
+    [HttpGet("error")]
+    public IActionResult Error([FromQuery] string message)
+    {
+        return BadRequest(new { error = message });
+    }
 }
