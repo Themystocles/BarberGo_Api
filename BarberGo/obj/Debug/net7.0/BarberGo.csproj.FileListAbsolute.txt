@@ -149,3 +149,4 @@ C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\BarberGo\bin\Debug\net
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\BarberGo\bin\Debug\net7.0\System.Formats.Asn1.dll
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\BarberGo\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\BarberGo\bin\Debug\net7.0\System.Security.Cryptography.Xml.dll
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\BarberGo\bin\Debug\net7.0\BarberGo.staticwebassets.runtime.json
