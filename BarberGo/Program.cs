@@ -97,7 +97,11 @@ namespace BarberGo
                 };
             })
             .AddCookie()
-            .AddCookie("External")
+            .AddCookie("External", options =>
+            {
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.None;
+            })
             .AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
