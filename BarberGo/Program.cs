@@ -71,10 +71,8 @@ namespace BarberGo
                 });
             });
 
-            // Adiciona cache distribuído em memória para session funcionar
-            builder.Services.AddDistributedMemoryCache();
-
-            // Configuração de Session (para manter estado OAuth)
+            // ✅ Sessão - necessário para armazenar estado entre requisições
+            builder.Services.AddDistributedMemoryCache(); // necessário para Session
             builder.Services.AddSession(options =>
             {
                 options.Cookie.Name = ".BarberGo.Session";
@@ -82,7 +80,7 @@ namespace BarberGo
                 options.Cookie.IsEssential = true;
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.IdleTimeout = TimeSpan.FromMinutes(30); // ajuste se quiser
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // duração da sessão
             });
 
             // JWT + Google Login + Cookies
@@ -113,11 +111,10 @@ namespace BarberGo
                 options.Cookie.Name = "BarberGo.Auth.Cookie";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.SameSite = SameSiteMode.None;
-                options.LoginPath = "/auth/login"; // ajuste se tiver rota de login custom
+                options.LoginPath = "/auth/login";
                 options.LogoutPath = "/auth/logout";
                 options.Events.OnRedirectToLogin = context =>
                 {
-                    // Para APIs evitar redirecionamento e retornar 401
                     if (context.Request.Path.StartsWithSegments("/api") && context.Response.StatusCode == 200)
                     {
                         context.Response.StatusCode = 401;
@@ -142,7 +139,7 @@ namespace BarberGo
                 };
             });
 
-            // CORS com cookies
+            // ✅ CORS com Cookies para React em domínio externo (como Render)
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
@@ -151,7 +148,7 @@ namespace BarberGo
                     policy.WithOrigins("https://barbergo-ui.onrender.com")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
-                          .AllowCredentials(); // necessário para cookies
+                          .AllowCredentials(); // necessário para envio de cookies
                 });
             });
 
@@ -160,7 +157,7 @@ namespace BarberGo
 
             var app = builder.Build();
 
-            // Proxy e cookies
+            // Proxy e política de cookies
             app.UseForwardedHeaders();
 
             app.UseCookiePolicy(new CookiePolicyOptions
@@ -169,6 +166,9 @@ namespace BarberGo
                 Secure = CookieSecurePolicy.Always
             });
 
+            // ✅ UseSession deve vir ANTES de UseAuthentication
+            app.UseSession();
+
             app.UseSwagger();
             app.UseSwaggerUI();
 
@@ -176,8 +176,6 @@ namespace BarberGo
             app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
-
-            app.UseSession(); // <<< ESSENCIAL: Sessão antes da autenticação
 
             app.UseAuthentication();
             app.UseAuthorization();
