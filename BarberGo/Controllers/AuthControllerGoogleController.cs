@@ -23,16 +23,14 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
-        var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        Console.WriteLine($"Ambiente atual: {environment}");
 
-        // Ajuste a URL para a rota correta do seu controller
-        var redirectUri = isDevelopment
-            ? "https://localhost:7032/auth/signin-google"
-            : "https://barbergo-api.onrender.com/auth/signin-google";
+        // Usa sempre a URL de produção para evitar inconsistência de ambientes
+        var redirectUri = "https://barbergo-api.onrender.com/auth/signin-google";
 
         var properties = new AuthenticationProperties { RedirectUri = redirectUri };
 
-        // Inicia o desafio de autenticação via Google
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
@@ -101,14 +99,20 @@ public class AuthGoogleController : ControllerBase
     {
         var decodedMessage = Uri.UnescapeDataString(message ?? "Erro desconhecido durante autenticação.");
 
-        // Log no console (pode ser substituído por um log real)
-        Console.WriteLine($"❌ Erro na autenticação: {decodedMessage}");
+        Console.WriteLine($"❌ Erro detalhado de autenticação OAuth: {decodedMessage}");
 
         return BadRequest(new
         {
             error = "Falha na autenticação via Google.",
             message = decodedMessage,
-            hint = "Verifique se você permitiu o acesso da conta Google e se as credenciais estão corretas."
+            possibleCauses = new[]
+            {
+            "A URI de redirecionamento pode estar incorreta ou não registrada no Google Cloud Console.",
+            "Cookies de autenticação podem estar sendo bloqueados ou não persistidos.",
+            "O frontend pode estar interferindo no fluxo OAuth.",
+            "Ambientes (dev/prod) estão trocando URLs inconsistentes."
+        },
+            resolution = "Revise a URI de redirecionamento, configuração no Google Console e garanta que cookies estejam permitidos no navegador."
         });
     }
 }
