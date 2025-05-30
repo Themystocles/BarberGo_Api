@@ -1,23 +1,16 @@
 ﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using BarberGo.Data;
 using BarberGo.Interfaces;
 using BarberGo.Repositories;
 using BarberGo.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using StackExchange.Redis;
-using Microsoft.AspNetCore.DataProtection;
-
 
 namespace BarberGo
 {
@@ -29,17 +22,17 @@ namespace BarberGo
 
             var builder = WebApplication.CreateBuilder(args);
 
-            // Configurar Forwarded Headers para Render (HTTPS reverso)
+            // HTTPS e proxies (necessário para Render)
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
 
-            // DbContext PostgreSQL
+            // DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Repositórios e serviços (copiar do seu código)
+            // Repositórios e serviços
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
@@ -78,20 +71,8 @@ namespace BarberGo
                 });
             });
 
-            // Configurar Redis (cache distribuído + Data Protection)
-            var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-            var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-
-            builder.Services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = redisConnectionString;
-                options.InstanceName = "BarberGo_";
-            });
-
-            builder.Services.AddDataProtection()
-                .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
-
-            // Sessão
+            // ✅ Sessão - necessário para armazenar estado entre requisições
+            builder.Services.AddDistributedMemoryCache(); // necessário para Session
             builder.Services.AddSession(options =>
             {
                 options.Cookie.Name = ".BarberGo.Session";
@@ -99,11 +80,10 @@ namespace BarberGo
                 options.Cookie.IsEssential = true;
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.Path = "/";
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // duração da sessão
             });
 
-            // Configurar autenticação JWT + Cookies + Google
+            // JWT + Google Login + Cookies
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
@@ -159,7 +139,7 @@ namespace BarberGo
                 };
             });
 
-            // CORS para seu frontend React hospedado
+            // ✅ CORS com Cookies para React em domínio externo (como Render)
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
@@ -168,7 +148,7 @@ namespace BarberGo
                     policy.WithOrigins("https://barbergo-ui.onrender.com")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
-                          .AllowCredentials();
+                          .AllowCredentials(); // necessário para envio de cookies
                 });
             });
 
@@ -177,6 +157,7 @@ namespace BarberGo
 
             var app = builder.Build();
 
+            // Proxy e política de cookies
             app.UseForwardedHeaders();
 
             app.UseCookiePolicy(new CookiePolicyOptions
@@ -185,21 +166,22 @@ namespace BarberGo
                 Secure = CookieSecurePolicy.Always
             });
 
-            app.UseRouting();
-
-            app.UseCors(MyAllowSpecificOrigins);
-
+            // ✅ UseSession deve vir ANTES de UseAuthentication
             app.UseSession();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseSwagger();
             app.UseSwaggerUI();
 
+            app.UseHttpsRedirection();
+            app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapControllers();
 
-            // Seu middleware de erro personalizado (caso tenha)
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.Run();
