@@ -28,11 +28,11 @@ namespace BarberGo
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
 
-            // DbContext com Npgsql e connection string do appsettings ou environment variable
+            // DbContext com Npgsql
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Serviços e repositórios
+            // Repositórios e serviços
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
@@ -43,7 +43,7 @@ namespace BarberGo
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-            // Swagger com suporte a JWT Bearer
+            // Swagger com JWT Bearer
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -124,7 +124,7 @@ namespace BarberGo
                 };
             });
 
-            // CORS para seu front-end
+            // CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
@@ -137,39 +137,51 @@ namespace BarberGo
                 });
             });
 
-            // Controllers e API Explorer
+            // Session e cache em memória
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            // Controllers e endpoints
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
 
-            // Middleware ForwardedHeaders para Render
+            // Middleware: Proxies (Render)
             app.UseForwardedHeaders();
 
-            // Política de cookies para HTTPS e SameSite
+            // Política de cookies
             app.UseCookiePolicy(new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.None,
                 Secure = CookieSecurePolicy.Always
             });
 
-            // Swagger UI
+            // Swagger
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            // Seu middleware customizado para tratamento de erros (se existir)
+            // Tratamento de erros
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
+            // HTTPS
             app.UseHttpsRedirection();
 
             // CORS
             app.UseCors(MyAllowSpecificOrigins);
 
+            // Session
+            app.UseSession();
+
             // Autenticação e autorização
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Rotas
+            // Controllers
             app.MapControllers();
 
             app.Run();

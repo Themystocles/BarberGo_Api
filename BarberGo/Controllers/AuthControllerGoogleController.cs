@@ -99,6 +99,16 @@ public class AuthGoogleController : ControllerBase
     [HttpGet("error")]
     public IActionResult Error([FromQuery] string message)
     {
-        return BadRequest(new { error = message });
+        var decodedMessage = Uri.UnescapeDataString(message ?? "Erro desconhecido durante autenticação.");
+
+        // Log no console (pode ser substituído por um log real)
+        Console.WriteLine($"❌ Erro na autenticação: {decodedMessage}");
+
+        return BadRequest(new
+        {
+            error = "Falha na autenticação via Google.",
+            message = decodedMessage,
+            hint = "Verifique se você permitiu o acesso da conta Google e se as credenciais estão corretas."
+        });
     }
 }
