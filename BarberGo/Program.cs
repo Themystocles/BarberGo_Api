@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Logging;
 
 namespace BarberGo
 {
@@ -124,8 +125,23 @@ namespace BarberGo
                 {
                     OnRemoteFailure = context =>
                     {
+                        var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+                        logger.LogError(context.Failure, "Falha na autenticação Google OAuth");
+
                         context.Response.Redirect("/auth/error?message=" + Uri.EscapeDataString(context.Failure?.Message ?? "Erro desconhecido"));
                         context.HandleResponse();
+                        return Task.CompletedTask;
+                    },
+                    OnTicketReceived = context =>
+                    {
+                        var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+                        logger.LogInformation("Google OAuth ticket recebido para usuário: {User}", context.Principal.Identity.Name);
+                        return Task.CompletedTask;
+                    },
+                    OnCreatingTicket = context =>
+                    {
+                        var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+                        logger.LogInformation("Criando ticket OAuth para usuário: {User}", context.Principal.Identity.Name);
                         return Task.CompletedTask;
                     }
                 };
@@ -183,6 +199,14 @@ namespace BarberGo
 
             // Session
             app.UseSession();
+
+            app.Use(async (context, next) =>
+            {
+                var logger = app.Services.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation("Request: {Method} {Path}", context.Request.Method, context.Request.Path);
+                await next();
+                logger.LogInformation("Response Status: {StatusCode}", context.Response.StatusCode);
+            });
 
             // Autenticação e autorização
             app.UseAuthentication();
