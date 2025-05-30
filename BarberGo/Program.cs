@@ -71,6 +71,20 @@ namespace BarberGo
                 });
             });
 
+            // Adiciona cache distribuído em memória para session funcionar
+            builder.Services.AddDistributedMemoryCache();
+
+            // Configuração de Session (para manter estado OAuth)
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.Name = ".BarberGo.Session";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // ajuste se quiser
+            });
+
             // JWT + Google Login + Cookies
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
@@ -96,8 +110,22 @@ namespace BarberGo
             })
             .AddCookie(options =>
             {
+                options.Cookie.Name = "BarberGo.Auth.Cookie";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.SameSite = SameSiteMode.None;
+                options.LoginPath = "/auth/login"; // ajuste se tiver rota de login custom
+                options.LogoutPath = "/auth/logout";
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    // Para APIs evitar redirecionamento e retornar 401
+                    if (context.Request.Path.StartsWithSegments("/api") && context.Response.StatusCode == 200)
+                    {
+                        context.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    }
+                    context.Response.Redirect(context.RedirectUri);
+                    return Task.CompletedTask;
+                };
             })
             .AddGoogle(googleOptions =>
             {
@@ -144,15 +172,15 @@ namespace BarberGo
             app.UseSwagger();
             app.UseSwaggerUI();
 
-           
             app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
 
+            app.UseSession(); // <<< ESSENCIAL: Sessão antes da autenticação
+
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
