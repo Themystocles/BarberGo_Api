@@ -173,6 +173,8 @@ namespace BarberGo
             app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
@@ -183,6 +185,8 @@ namespace BarberGo
             app.MapControllers();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            app.MapFallbackToFile("index.html");
 
             app.Run();
         }

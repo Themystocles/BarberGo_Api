@@ -1,11 +1,88 @@
 {
   "Version": 1,
-  "Hash": "7iDlJnNvLb6LiaEGT4QdVvSzxWNT7PTm7z7g22auW0w=",
+  "Hash": "InLZIdnwn0Dj5xAfnGoLfOR/R7vbTqS++6J6/VyuIuk=",
   "Source": "BarberGo",
   "BasePath": "_content/BarberGo",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "BarberGo\\wwwroot",
+      "Source": "BarberGo",
+      "ContentRoot": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\",
+      "BasePath": "_content/BarberGo",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\assets\\index-BfoSertg.css",
+      "SourceId": "BarberGo",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\",
+      "BasePath": "_content/BarberGo",
+      "RelativePath": "assets/index-BfoSertg.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\index-BfoSertg.css"
+    },
+    {
+      "Identity": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\assets\\index-CjARzbXZ.js",
+      "SourceId": "BarberGo",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\",
+      "BasePath": "_content/BarberGo",
+      "RelativePath": "assets/index-CjARzbXZ.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\index-CjARzbXZ.js"
+    },
+    {
+      "Identity": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\index.html",
+      "SourceId": "BarberGo",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\",
+      "BasePath": "_content/BarberGo",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\vite.svg",
+      "SourceId": "BarberGo",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\",
+      "BasePath": "_content/BarberGo",
+      "RelativePath": "vite.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\vite.svg"
+    }
+  ]
 }
