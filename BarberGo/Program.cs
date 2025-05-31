@@ -113,7 +113,7 @@ namespace BarberGo
                 options.AddPolicy(MyAllowSpecificOrigins,
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173") // Permite requisições do React
+                        policy.WithOrigins("http://localhost:5173", "https://barbergo-ui.onrender.com") // Permite requisições do React
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
@@ -138,6 +138,7 @@ namespace BarberGo
             app.UseHttpsRedirection();
 
             app.UseCors(MyAllowSpecificOrigins);
+            app.UseForwardedHeaders();
 
             app.UseAuthentication();
             app.UseAuthorization();
