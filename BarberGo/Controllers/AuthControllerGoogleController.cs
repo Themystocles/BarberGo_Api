@@ -61,7 +61,7 @@ public class AuthGoogleController : ControllerBase
 
         var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);
 
-        var frontendUrl = "https://barbergo-api.onrender.com/login-success";
+        var frontendUrl = "https://barbergo-ui.onrender.com/login-success";
         return Redirect($"{frontendUrl}?token={token}");
     }
 }
