@@ -22,7 +22,7 @@ namespace BarberGo
 
             var builder = WebApplication.CreateBuilder(args);
 
-            // HTTPS e proxies (necessário para Render)
+            // Proxy para Render
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
@@ -71,19 +71,7 @@ namespace BarberGo
                 });
             });
 
-            // ✅ Sessão - necessário para armazenar estado entre requisições
-            builder.Services.AddDistributedMemoryCache(); // necessário para Session
-            builder.Services.AddSession(options =>
-            {
-                options.Cookie.Name = ".BarberGo.Session";
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.IdleTimeout = TimeSpan.FromMinutes(30); // duração da sessão
-            });
-
-            // JWT + Google Login + Cookies
+            // Autenticação
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
@@ -129,6 +117,10 @@ namespace BarberGo
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
                 googleOptions.CallbackPath = "/auth/signin-google";
+                googleOptions.UsePkce = true; // importante para segurança e evitar sessão
+                googleOptions.SaveTokens = true;
+                googleOptions.CorrelationCookie.SameSite = SameSiteMode.Lax;
+
                 googleOptions.Events = new OAuthEvents
                 {
                     OnRemoteFailure = context =>
@@ -139,7 +131,7 @@ namespace BarberGo
                 };
             });
 
-            // ✅ CORS com Cookies para React em domínio externo (como Render)
+            // CORS para frontend
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
@@ -148,7 +140,7 @@ namespace BarberGo
                     policy.WithOrigins("https://barbergo-ui.onrender.com")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
-                          .AllowCredentials(); // necessário para envio de cookies
+                          .AllowCredentials();
                 });
             });
 
@@ -157,7 +149,6 @@ namespace BarberGo
 
             var app = builder.Build();
 
-            // Proxy e política de cookies
             app.UseForwardedHeaders();
 
             app.UseCookiePolicy(new CookiePolicyOptions
@@ -165,9 +156,6 @@ namespace BarberGo
                 MinimumSameSitePolicy = SameSiteMode.None,
                 Secure = CookieSecurePolicy.Always
             });
-
-            // ✅ UseSession deve vir ANTES de UseAuthentication
-            app.UseSession();
 
             app.UseSwagger();
             app.UseSwaggerUI();
