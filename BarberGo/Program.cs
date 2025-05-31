@@ -28,11 +28,11 @@ namespace BarberGo
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
 
-            // DbContext
+            // Configuração do DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Repositórios e serviços
+            // Repositórios e Serviços
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
@@ -43,7 +43,7 @@ namespace BarberGo
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-            // Swagger com JWT
+            // Configuração do Swagger com JWT
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -71,14 +71,14 @@ namespace BarberGo
                 });
             });
 
-            // Autenticação
+            // Configuração da autenticação
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
@@ -117,7 +117,7 @@ namespace BarberGo
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
                 googleOptions.CallbackPath = "/auth/signin-google";
-                googleOptions.UsePkce = true; // importante para segurança e evitar sessão
+                googleOptions.UsePkce = true; // segurança para evitar ataques de sessão
                 googleOptions.SaveTokens = true;
                 googleOptions.CorrelationCookie.SameSite = SameSiteMode.Lax;
 
@@ -131,7 +131,7 @@ namespace BarberGo
                 };
             });
 
-            // CORS para frontend
+            // Configuração do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             builder.Services.AddCors(options =>
             {
@@ -149,20 +149,27 @@ namespace BarberGo
 
             var app = builder.Build();
 
+            // Middleware para headers de proxy reverso (ex: Render)
             app.UseForwardedHeaders();
 
+            // Política de cookies
             app.UseCookiePolicy(new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.None,
                 Secure = CookieSecurePolicy.Always
             });
 
+            // Middleware para tratamento de erros customizado (colocar antes do middleware que usa autenticação)
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
             app.UseSwagger();
             app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
@@ -171,8 +178,6 @@ namespace BarberGo
             app.UseAuthorization();
 
             app.MapControllers();
-
-            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.MapFallbackToFile("index.html");
 
