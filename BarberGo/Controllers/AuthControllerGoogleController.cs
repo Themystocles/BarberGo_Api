@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BarberGo.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
 using BarberGo.Data;
 
 [ApiController]
@@ -19,29 +20,20 @@ public class AuthGoogleController : ControllerBase
         _context = context;
     }
 
-    // Inicia o login via Google, redireciona para o Google com callback configurado
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        Console.WriteLine($"Ambiente atual: {environment}");
-
-        // Usa sempre a URL de produção para evitar inconsistência de ambientes
-        var redirectUri = "https://barbergo-api.onrender.com/auth/signin-google";
-
-        var properties = new AuthenticationProperties { RedirectUri = redirectUri };
-
+        var redirectUrl = Url.Action("GoogleResponse");
+        var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
-    // Callback que o Google chama após autenticação do usuário
-    [HttpGet("signin-google")]
+    [HttpGet("google-response")]
     public async Task<IActionResult> GoogleResponse()
     {
         var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
         if (!result.Succeeded)
-            return BadRequest("Falha na autenticação via Google.");
+            return BadRequest("Autenticação com Google falhou");
 
         var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
         var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -50,69 +42,26 @@ public class AuthGoogleController : ControllerBase
         if (string.IsNullOrEmpty(email))
             return BadRequest("Email não fornecido pelo Google.");
 
-        // Verifica se o usuário já existe no banco
+        // Verifica se o usuário já existe
         var usuario = _context.AppUsers.FirstOrDefault(u => u.Email == email);
+
         if (usuario == null)
         {
+            // Cria novo usuário com perfil padrão
             usuario = new AppUser
             {
                 Name = nome,
                 Email = email,
-                Type = TipoUsuario.Client
+                Type = TipoUsuario.Client // ou qualquer padrão
             };
+
             _context.AppUsers.Add(usuario);
             await _context.SaveChangesAsync();
         }
 
-        // Cria nova identidade com Claims personalizadas
-        var identity = new ClaimsIdentity(new[]
-        {
-        new Claim(ClaimTypes.Name, nome),
-        new Claim(ClaimTypes.Email, email),
-        new Claim(ClaimTypes.Role, usuario.Type.ToString())
-    }, CookieAuthenticationDefaults.AuthenticationScheme);
-
-        var principal = new ClaimsPrincipal(identity);
-
-        // 👇 Cria o cookie de autenticação
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal,
-            new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTime.UtcNow.AddHours(1)
-            });
-        Console.WriteLine("✅ Cookie de autenticação criado com sucesso.");
-
-        // Gera token JWT (opcional, se ainda quiser usá-lo)
         var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);
 
-        var frontendUrl = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
-            ? "http://localhost:5173/login-success"
-            : "https://barbergo-ui.onrender.com/login-success";
-
+        var frontendUrl = "https://barbergo-api.onrender.com/login-success";
         return Redirect($"{frontendUrl}?token={token}");
-    }
-    [HttpGet("error")]
-    public IActionResult Error([FromQuery] string message)
-    {
-        var decodedMessage = Uri.UnescapeDataString(message ?? "Erro desconhecido durante autenticação.");
-
-        Console.WriteLine($"❌ Erro detalhado de autenticação OAuth: {decodedMessage}");
-
-        return BadRequest(new
-        {
-            error = "Falha na autenticação via Google.",
-            message = decodedMessage,
-            possibleCauses = new[]
-            {
-            "A URI de redirecionamento pode estar incorreta ou não registrada no Google Cloud Console.",
-            "Cookies de autenticação podem estar sendo bloqueados ou não persistidos.",
-            "O frontend pode estar interferindo no fluxo OAuth.",
-            "Ambientes (dev/prod) estão trocando URLs inconsistentes."
-        },
-            resolution = "Revise a URI de redirecionamento, configuração no Google Console e garanta que cookies estejam permitidos no navegador."
-        });
     }
 }
