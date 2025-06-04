@@ -45,6 +45,27 @@ namespace BarberGo.Controllers
 
             return Ok(user);
         }
+        [HttpPost("upload")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Arquivo inválido");
+
+            var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+            Directory.CreateDirectory(uploadsDir);
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
+            return Ok(new { url = imageUrl });
+        }
 
     }
   

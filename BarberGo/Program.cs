@@ -132,6 +132,7 @@ namespace BarberGo
             
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
 
             app.UseHttpsRedirection();
