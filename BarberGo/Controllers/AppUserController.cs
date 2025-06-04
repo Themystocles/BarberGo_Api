@@ -52,7 +52,7 @@ namespace BarberGo.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("Arquivo inválido");
 
-            var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+            var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
             Directory.CreateDirectory(uploadsDir);
 
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
