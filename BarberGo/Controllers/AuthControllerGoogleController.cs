@@ -40,6 +40,8 @@ public class AuthGoogleController : ControllerBase
         var nome = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
         var fotoPerfil = claims?.FirstOrDefault(c => c.Type == "picture")?.Value;
 
+        Console.WriteLine("Foto de perfil do Google: " + fotoPerfil);
+
         if (string.IsNullOrEmpty(email))
             return BadRequest("Email não fornecido pelo Google.");
 
