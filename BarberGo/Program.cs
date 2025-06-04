@@ -104,6 +104,11 @@ namespace BarberGo
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
                 googleOptions.CallbackPath = "/signin-google";
+               
+                googleOptions.Scope.Clear();
+                googleOptions.Scope.Add("openid");
+                googleOptions.Scope.Add("profile");
+                googleOptions.Scope.Add("email");
             });
 
             // Configuração do CORS
