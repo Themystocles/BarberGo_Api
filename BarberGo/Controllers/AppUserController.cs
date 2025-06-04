@@ -43,6 +43,12 @@ namespace BarberGo.Controllers
             if (user == null)
                 return NotFound("Usuário não encontrado.");
 
+            // Se profilePictureUrl só salva o nome do arquivo, concatene a URL base:
+            if (!string.IsNullOrEmpty(user.ProfilePictureUrl) && !user.ProfilePictureUrl.StartsWith("http"))
+            {
+                user.ProfilePictureUrl = $"{Request.Scheme}://{Request.Host}/uploads/{user.ProfilePictureUrl}";
+            }
+
             return Ok(user);
         }
         [HttpPost("upload")]
