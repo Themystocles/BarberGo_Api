@@ -21,5 +21,7 @@ namespace BarberGo.Repositories
         {
             return await _context.AppUsers.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+
     }
 }
