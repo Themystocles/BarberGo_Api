@@ -1,4 +1,5 @@
 ﻿using BarberGo.Entities;
+using BarberGo.Interfaces;
 using BarberGo.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace BarberGo.Controllers
     public class AppUserController : GenericRepositoryController<AppUser>
     {
         private readonly LoginServices _loginServices;
-        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices)
+        private readonly CreateUserAdminServices _createUserAdmin;
+        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices, CreateUserAdminServices createUserAdmin)
               : base(genericRepositoryServices)
         {
             _loginServices = loginServices;
+            _createUserAdmin = createUserAdmin;
         }
         public override Task<ActionResult<AppUser>> GetByIdAsync(int id)
         {
@@ -29,6 +32,16 @@ namespace BarberGo.Controllers
             var createdEntity = await _genericRepositoryServices.CreateAsync(entity);
             return Created("", createdEntity);
         }
+        [Authorize]
+        [HttpPost("createUserAdmin")]
+        public async Task<ActionResult<AppUser>> CreateUserAdmin(AppUser appUser)
+        {
+            var createuserAdmin = await _createUserAdmin.CreateAppuserAdminAsync(appUser);
+
+            return Created("", createuserAdmin);
+
+        }
+
         [Authorize]
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
@@ -43,7 +56,7 @@ namespace BarberGo.Controllers
             if (user == null)
                 return NotFound("Usuário não encontrado.");
 
-            // Se profilePictureUrl só salva o nome do arquivo, concatene a URL base:
+           
             if (!string.IsNullOrEmpty(user.ProfilePictureUrl) && !user.ProfilePictureUrl.StartsWith("http"))
             {
                 user.ProfilePictureUrl = $"{Request.Scheme}://{Request.Host}/uploads/{user.ProfilePictureUrl}";
