@@ -116,6 +116,11 @@ namespace BarberGo
 
                 googleOptions.ClaimActions.MapJsonKey("picture", "picture", "url");
             });
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                    policy.RequireClaim(System.Security.Claims.ClaimTypes.Role, "1"));
+            });
 
             // Configuração do CORS
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
