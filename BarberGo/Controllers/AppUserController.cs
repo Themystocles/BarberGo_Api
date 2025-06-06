@@ -32,7 +32,7 @@ namespace BarberGo.Controllers
             var createdEntity = await _genericRepositoryServices.CreateAsync(entity);
             return Created("", createdEntity);
         }
-        [Authorize]
+        [Authorize(Policy ="AdminOnly")]
         [HttpPost("createUserAdmin")]
         public async Task<ActionResult<AppUser>> CreateUserAdmin(AppUser appUser)
         {
