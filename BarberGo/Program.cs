@@ -123,7 +123,7 @@ namespace BarberGo
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy =>
-                    policy.RequireClaim(System.Security.Claims.ClaimTypes.Role, "1"));
+                    policy.RequireClaim(System.Security.Claims.ClaimTypes.Role, "Admin"));
             });
 
             // Configuração do CORS
