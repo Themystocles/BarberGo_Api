@@ -81,8 +81,12 @@ namespace BarberGo
 
             builder.Services.AddAuthentication(options =>
             {
+               // options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+               // options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+              //  options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
 
