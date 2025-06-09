@@ -16,7 +16,9 @@ namespace BarberGo.Entities
         public string? ProfilePictureUrl { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
         public TipoUsuario Type { get; set; }
-    }
+
+        public bool IsMaster { get; set; } = false;
+}
 
     public enum TipoUsuario
     {
