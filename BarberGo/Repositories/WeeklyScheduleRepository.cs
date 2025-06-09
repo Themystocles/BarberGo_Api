@@ -112,7 +112,7 @@ namespace BarberGo.Repositories
         public async Task<List<BarberDto>> GetUserForType()
         {
             var barbers = await _context.AppUsers
-                .Where(t => t.Type == TipoUsuario.Administrator)
+                .Where(t => t.Type == TipoUsuario.Administrator && t.IsMaster == false)
                 .Select(t => new BarberDto
                 {
                     Id = t.Id,

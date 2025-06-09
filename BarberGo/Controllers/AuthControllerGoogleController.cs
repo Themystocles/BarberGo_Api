@@ -55,7 +55,7 @@ public class AuthGoogleController : ControllerBase
             {
                 Name = nome,
                 Email = email,
-                Type = TipoUsuario.Client, // ou qualquer padrão
+                Type = TipoUsuario.Client, 
                 ProfilePictureUrl = fotoPerfil
             };
 
