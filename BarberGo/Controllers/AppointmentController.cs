@@ -5,6 +5,7 @@ using BarberGo.Entities.DTOs;
 using BarberGo.Interfaces;
 using BarberGo.Repositories;
 using BarberGo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -62,6 +63,7 @@ public class AppointmentController : ControllerBase
 
         return Ok(Appointment);
     }
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet("BarberHistoryappointments/{idbarber}")]
     public async Task<ActionResult<IEnumerable<MyAppointmentDto>>> GetMyAppointmentsHistorybyBarberId(int idbarber, [FromQuery] DateTime? date)
     {
