@@ -64,13 +64,15 @@ public class AuthGoogleController : ControllerBase
         }
         else
         {
-            // Atualiza a foto do perfil se mudou
-            if (usuario.ProfilePictureUrl != fotoPerfil)
+            
+
+            if (string.IsNullOrEmpty(usuario.ProfilePictureUrl))
             {
                 usuario.ProfilePictureUrl = fotoPerfil;
                 _context.AppUsers.Update(usuario);
                 await _context.SaveChangesAsync();
             }
+            
         }
 
         var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);
