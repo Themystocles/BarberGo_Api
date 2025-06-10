@@ -79,5 +79,7 @@ public class AuthGoogleController : ControllerBase
 
         var frontendUrl = "https://barbergo-ui.onrender.com/login-success";
         return Redirect($"{frontendUrl}?token={token}");
+
+        //teste
     }
 }
