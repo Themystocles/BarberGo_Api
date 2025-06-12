@@ -7,6 +7,6 @@
 
         public string phone { get; set; }
 
-        public string Image { get; set; }
+        public string ProfilePictureUrl { get; set; }
     }
 }
