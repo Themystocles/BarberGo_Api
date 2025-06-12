@@ -118,7 +118,7 @@ namespace BarberGo.Repositories
                     Id = t.Id,
                     Name = t.Name,
                     phone = t.Phone,
-                    Image = t.ProfilePictureUrl
+                    ProfilePictureUrl = t.ProfilePictureUrl
                     
                     
                 })
