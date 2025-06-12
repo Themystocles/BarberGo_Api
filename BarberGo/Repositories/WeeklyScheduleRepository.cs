@@ -116,7 +116,11 @@ namespace BarberGo.Repositories
                 .Select(t => new BarberDto
                 {
                     Id = t.Id,
-                    Name = t.Name  
+                    Name = t.Name,
+                    phone = t.Phone,
+                    Image = t.ProfilePictureUrl
+                    
+                    
                 })
                 .ToListAsync();
 
