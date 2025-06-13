@@ -14,12 +14,13 @@ namespace BarberGo.Controllers
     public class AppUserController : GenericRepositoryController<AppUser>
     {
         private readonly LoginServices _loginServices;
-        private readonly CreateUserAdminServices _createUserAdmin;
-        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices, CreateUserAdminServices createUserAdmin)
+        private readonly UserAccountServices _userAccountServices;
+        
+        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices, UserAccountServices userAccount)
               : base(genericRepositoryServices)
         {
             _loginServices = loginServices;
-            _createUserAdmin = createUserAdmin;
+            _userAccountServices = userAccount;
         }
         public override Task<ActionResult<AppUser>> GetByIdAsync(int id)
         {
@@ -29,14 +30,27 @@ namespace BarberGo.Controllers
         [AllowAnonymous] 
         public override async Task<ActionResult<AppUser>> CreateEntity(AppUser entity)
         {
+
+            try
+            {
+                await _userAccountServices.VerifyEmailExsist(entity.Email);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message); 
+            }
+
             var createdEntity = await _genericRepositoryServices.CreateAsync(entity);
             return Created("", createdEntity);
+
+
+
         }
         [Authorize(Policy ="AdminOnly")]
         [HttpPost("createUserAdmin")]
         public async Task<ActionResult<AppUser>> CreateUserAdmin(AppUser appUser)
         {
-            var createuserAdmin = await _createUserAdmin.CreateAppuserAdminAsync(appUser);
+            var createuserAdmin = await _userAccountServices.CreateAppuserAdminAsync(appUser);
 
             return Created("", createuserAdmin);
 

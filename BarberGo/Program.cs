@@ -43,8 +43,8 @@ namespace BarberGo
             builder.Services.AddScoped<IWeeklySchedule, WeeklyScheduleRepository>();
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-            builder.Services.AddScoped<ICreateUserAdmin, CreateUserAdmin>();
-            builder.Services.AddScoped<CreateUserAdminServices>();
+            builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+            builder.Services.AddScoped<UserAccountServices>();
 
 
             // Configuração do Swagger com JWT

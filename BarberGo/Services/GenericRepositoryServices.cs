@@ -38,6 +38,7 @@ namespace BarberGo.Services
                 throw new ArgumentNullException(nameof(entity), "A entidade não pode ser nula.");
             }
             
+            
             return await _genericRepository.CreateAsync(entity);
 
         }
