@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "InLZIdnwn0Dj5xAfnGoLfOR/R7vbTqS++6J6/VyuIuk=",
+  "Hash": "wnX11jF5nQWGWkgwVIxQ/zyC0c3ququY7pF2R7tMFgY=",
   "Source": "BarberGo",
   "BasePath": "_content/BarberGo",
   "Mode": "Default",
@@ -66,6 +66,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\uploads\\Social alto.jpg",
+      "SourceId": "BarberGo",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\",
+      "BasePath": "_content/BarberGo",
+      "RelativePath": "uploads/Social alto.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Social alto.jpg"
     },
     {
       "Identity": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\BarberGo\\wwwroot\\vite.svg",

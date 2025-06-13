@@ -1,14 +1,15 @@
 ﻿using BarberGo.Data;
 using BarberGo.Entities;
 using BarberGo.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarberGo.Repositories
 {
-    public class CreateUserAdmin : ICreateUserAdmin
+    public class UserAccountRepository : IUserAccountRepository
     {
         private readonly DataContext _dataContext;
 
-        public CreateUserAdmin(DataContext dataContext)
+        public UserAccountRepository(DataContext dataContext)
         {
             _dataContext = dataContext;
             
@@ -19,6 +20,13 @@ namespace BarberGo.Repositories
             await _dataContext.SaveChangesAsync();
 
             return appUser;
+        }
+
+        public async Task<bool> EmailExistsAsync(string Email)
+        {
+          var user =  await _dataContext.AppUsers.AsNoTracking().FirstOrDefaultAsync(u => u.Email == Email);
+          return user != null;
+            
         }
     }
 }
