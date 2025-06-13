@@ -50,6 +50,16 @@ namespace BarberGo.Controllers
         [HttpPost("createUserAdmin")]
         public async Task<ActionResult<AppUser>> CreateUserAdmin(AppUser appUser)
         {
+
+            try
+            {
+                await _userAccountServices.VerifyEmailExsist(appUser.Email);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+
             var createuserAdmin = await _userAccountServices.CreateAppuserAdminAsync(appUser);
 
             return Created("", createuserAdmin);
