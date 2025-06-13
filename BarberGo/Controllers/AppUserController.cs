@@ -2,6 +2,7 @@
 using BarberGo.Interfaces;
 using BarberGo.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -39,6 +40,9 @@ namespace BarberGo.Controllers
             {
                 return Conflict(new { message = ex.Message });
             }
+
+            var passwordHasher = new PasswordHasher<AppUser>();
+            entity.PasswordHash = passwordHasher.HashPassword(entity, entity.PasswordHash);
 
             var createdEntity = await _genericRepositoryServices.CreateAsync(entity);
             return Created("", createdEntity);
