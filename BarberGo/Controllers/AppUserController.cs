@@ -37,7 +37,7 @@ namespace BarberGo.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message); 
+                return Conflict(new { message = ex.Message });
             }
 
             var createdEntity = await _genericRepositoryServices.CreateAsync(entity);
