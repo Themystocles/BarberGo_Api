@@ -3,6 +3,8 @@ using BarberGo.Interfaces;
 using BarberGo.Repositories;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity;
+using BarberGo.Entities.DTOs;
+using System.Security;
 
 namespace BarberGo.Services
 {
@@ -35,18 +37,17 @@ namespace BarberGo.Services
                 throw new InvalidOperationException("Já existe um usuário com esse email.");
             }
         }
-        public async Task <bool> verifyPassword(AppUser entity, string password)
+        public async Task <bool> verifyPassword(string password, string confirmpassword)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
             if (password == null)
                 throw new ArgumentNullException(nameof(password));
+            if (confirmpassword == null)
+                throw new ArgumentNullException(nameof(confirmpassword));
+            if (password != confirmpassword)
+                throw new InvalidOperationException("A senha e a confirmação de senha devem ser iguais.");
 
-            var passwordHasher = new PasswordHasher<AppUser>();
 
-            var result = passwordHasher.VerifyHashedPassword(entity, entity.PasswordHash, password);
-
-            return result == PasswordVerificationResult.Success;
+            return true;
 
 
 

@@ -1,4 +1,5 @@
 ﻿using BarberGo.Entities;
+using BarberGo.Entities.DTOs;
 using BarberGo.Interfaces;
 using BarberGo.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -27,6 +28,7 @@ namespace BarberGo.Controllers
         {
             return Task.FromResult<ActionResult<AppUser>>(Unauthorized("Acesso negado. Você não tem permissão para executar esta ação."));
         }
+        [Obsolete("Use o endpoint /register em vez deste.")]
         [HttpPost("create")]
         [AllowAnonymous] 
         public override async Task<ActionResult<AppUser>> CreateEntity(AppUser entity)
@@ -41,6 +43,7 @@ namespace BarberGo.Controllers
                 return Conflict(new { message = ex.Message });
             }
 
+
             var passwordHasher = new PasswordHasher<AppUser>();
             entity.PasswordHash = passwordHasher.HashPassword(entity, entity.PasswordHash);
 
@@ -50,6 +53,49 @@ namespace BarberGo.Controllers
 
 
         }
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public  async Task<ActionResult<RegisterUserDto>> RegisterUser(RegisterUserDto entity)
+        {
+            try
+            {
+                await _userAccountServices.VerifyEmailExsist(entity.Email);
+            } 
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+
+            try
+            {
+                await _userAccountServices.verifyPassword(entity.Password, entity.ConfirmPassword); 
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+
+            
+
+            var appUser = new AppUser();
+                appUser.Name = entity.Name;
+                appUser.Email = entity.Email;
+                appUser.Phone = entity.Phone;
+                appUser.ProfilePictureUrl = entity.ProfilePictureUrl;
+                appUser.Type = entity.Type;
+
+            var passwordHasher = new PasswordHasher<AppUser>();
+            appUser.PasswordHash = passwordHasher.HashPassword(appUser, entity.Password);
+
+
+            var createdEntity = await _genericRepositoryServices.CreateAsync(appUser);
+            return Created("", createdEntity);
+
+        }
+
+
+
+
         [Authorize(Policy ="AdminOnly")]
         [HttpPost("createUserAdmin")]
         public async Task<ActionResult<AppUser>> CreateUserAdmin(AppUser appUser)
