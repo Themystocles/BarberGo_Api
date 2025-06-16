@@ -1,5 +1,6 @@
 ﻿using BarberGo.Entities;
 using BarberGo.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace BarberGo.Services
 {
@@ -16,11 +17,19 @@ namespace BarberGo.Services
         public async Task<string> LoginAppUser(LoginModel model)
         {
             var user = await _userRepository.GetUserByUsernameAsync(model.Email);
-
-            if (user == null || user.PasswordHash != model.Password)
+            //|| user.PasswordHash != model.Password
+            if (user == null )
             {
                 return null;
             }
+            var passwordHasher = new PasswordHasher<AppUser>();
+            var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                return null;
+            }
+
             return _tokenService.GenerateToken(user.Email, user.Type);
         }
         public async Task<AppUser?> GetUserProfileByEmailAsync(string email)
