@@ -13,11 +13,11 @@ namespace BarberGo.Entities.DTOs
 
         public string? Phone { get; set; }
 
-        [Required]
-        [MinLength(6)]
+        [Required(ErrorMessage = "A senha é obrigatória.")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter no mínimo 6 caracteres.")]
         public string Password { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A confirmação de senha é obrigatória.")]
         [Compare("Password", ErrorMessage = "As senhas não coincidem.")]
         public string ConfirmPassword { get; set; }
 
