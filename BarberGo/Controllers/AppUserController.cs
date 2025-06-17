@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Win32;
 
 namespace BarberGo.Controllers
 {
@@ -98,21 +99,39 @@ namespace BarberGo.Controllers
 
         [Authorize(Policy ="AdminOnly")]
         [HttpPost("createUserAdmin")]
-        public async Task<ActionResult<AppUser>> CreateUserAdmin(AppUser appUser)
+        public async Task<ActionResult<RegisterUserDto>> CreateUserAdmin(RegisterUserDto entity)
         {
 
             try
             {
-                await _userAccountServices.VerifyEmailExsist(appUser.Email);
+                await _userAccountServices.VerifyEmailExsist(entity.Email);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+            try
+            {
+                await _userAccountServices.verifyPassword(entity.Password, entity.ConfirmPassword);
             }
             catch (InvalidOperationException ex)
             {
                 return Conflict(new { message = ex.Message });
             }
 
+            var appUser = new AppUser();
+            appUser.Name = entity.Name;
+            appUser.Email = entity.Email;
+            appUser.Phone = entity.Phone;
+            appUser.ProfilePictureUrl = entity.ProfilePictureUrl;
+            appUser.Type = entity.Type;
+
+            var passwordHasher = new PasswordHasher<AppUser>();
+            appUser.PasswordHash = passwordHasher.HashPassword(appUser, entity.Password);
+
             var createuserAdmin = await _userAccountServices.CreateAppuserAdminAsync(appUser);
 
-            return Created("", createuserAdmin);
+            return Created("", appUser);
 
         }
 
