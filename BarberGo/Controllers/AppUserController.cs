@@ -162,7 +162,7 @@ namespace BarberGo.Controllers
 
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("GetUserByEmail")]
-        public async Task<ActionResult<AppUser>> getUserByEmail(string email)
+        public async Task<ActionResult<AppUser>> getUserByEmail([FromQuery] string email)
         {
           var user =  await _userAccountServices.GetUserbyEmail(email);
             return Ok(user);
