@@ -83,6 +83,10 @@ namespace BarberGo.Services
         }
         public async Task<AppUser> GetUserbyEmail(string email)
         {
+            if (!string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentException("O email não pode ser vazio.", nameof(email));
+            }
            var user = await _userAccountRepositoty.GetUserByEmail(email);
 
             return user;
