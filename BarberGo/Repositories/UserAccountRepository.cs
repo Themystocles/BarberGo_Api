@@ -28,5 +28,25 @@ namespace BarberGo.Repositories
           return user != null;
             
         }
+
+        public async Task<AppUser> GetUserByEmail(string email)
+        {
+            var user = await _dataContext.AppUsers.FirstOrDefaultAsync(e => e.Email == email);
+
+            
+
+            return user;
+
+
+        }
+
+        public async Task<AppUser> UpdateUserToAdmin(AppUser appUser)
+        {
+             _dataContext.Update(appUser);
+
+            await _dataContext.SaveChangesAsync();
+
+            return appUser;
+        }
     }
 }

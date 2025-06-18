@@ -134,6 +134,32 @@ namespace BarberGo.Controllers
             return Created("", appUser);
 
         }
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("PromoverUsuarioparaAdmin")]
+        public async Task<ActionResult<AppUser>> PromoveUserToAdmin(PromoteUserDto user)
+        {
+            try
+            {
+                await _userAccountServices.UpdateUserToAdmin(user.Email);
+                return Ok(user);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro interno no servidor", detalhe = ex.Message });
+            }
+
+            
+
+        }
+
 
         [Authorize]
         [HttpGet("profile")]
