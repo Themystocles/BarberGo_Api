@@ -52,6 +52,35 @@ namespace BarberGo.Services
 
 
         }
+        public async Task<AppUser> UpdateUserToAdmin(string email)
+        {
+            if(string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException(nameof(email), "O email não pode ser vazio ou nulo.");
+            }
+
+            var user = await _userAccountRepositoty.GetUserByEmail(email);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException("O Email informado está incorreto ou não existe");
+            }
+
+
+            user.Type = TipoUsuario.Administrator;
+
+
+
+            await _userAccountRepositoty.UpdateUserToAdmin(user);
+
+            return user;
+
+
+
+           
+
+            
+        }
 
     }
 }
