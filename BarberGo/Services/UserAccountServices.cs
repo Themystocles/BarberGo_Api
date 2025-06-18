@@ -81,6 +81,12 @@ namespace BarberGo.Services
 
             
         }
+        public async Task<AppUser> GetUserbyEmail(string email)
+        {
+           var user = await _userAccountRepositoty.GetUserByEmail(email);
+
+            return user;
+        }
 
     }
 }
