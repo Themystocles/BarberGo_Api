@@ -11,14 +11,14 @@ using Microsoft.Win32;
 
 namespace BarberGo.Controllers
 {
-    
+
     [ApiController]
     [Route("api/[controller]")]
     public class AppUserController : GenericRepositoryController<AppUser>
     {
         private readonly LoginServices _loginServices;
         private readonly UserAccountServices _userAccountServices;
-        
+
         public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices, UserAccountServices userAccount)
               : base(genericRepositoryServices)
         {
@@ -31,7 +31,7 @@ namespace BarberGo.Controllers
         }
         [Obsolete("Use o endpoint /register em vez deste.")]
         [HttpPost("create")]
-        [AllowAnonymous] 
+        [AllowAnonymous]
         public override async Task<ActionResult<AppUser>> CreateEntity(AppUser entity)
         {
 
@@ -56,12 +56,12 @@ namespace BarberGo.Controllers
         }
         [HttpPost("register")]
         [AllowAnonymous]
-        public  async Task<ActionResult<RegisterUserDto>> RegisterUser(RegisterUserDto entity)
+        public async Task<ActionResult<RegisterUserDto>> RegisterUser(RegisterUserDto entity)
         {
             try
             {
                 await _userAccountServices.VerifyEmailExsist(entity.Email);
-            } 
+            }
             catch (InvalidOperationException ex)
             {
                 return Conflict(new { message = ex.Message });
@@ -69,21 +69,21 @@ namespace BarberGo.Controllers
 
             try
             {
-                await _userAccountServices.verifyPassword(entity.Password, entity.ConfirmPassword); 
+                await _userAccountServices.verifyPassword(entity.Password, entity.ConfirmPassword);
             }
             catch (InvalidOperationException ex)
             {
                 return Conflict(new { message = ex.Message });
             }
 
-            
+
 
             var appUser = new AppUser();
-                appUser.Name = entity.Name;
-                appUser.Email = entity.Email;
-                appUser.Phone = entity.Phone;
-                appUser.ProfilePictureUrl = entity.ProfilePictureUrl;
-                appUser.Type = entity.Type;
+            appUser.Name = entity.Name;
+            appUser.Email = entity.Email;
+            appUser.Phone = entity.Phone;
+            appUser.ProfilePictureUrl = entity.ProfilePictureUrl;
+            appUser.Type = entity.Type;
 
             var passwordHasher = new PasswordHasher<AppUser>();
             appUser.PasswordHash = passwordHasher.HashPassword(appUser, entity.Password);
@@ -97,7 +97,7 @@ namespace BarberGo.Controllers
 
 
 
-        [Authorize(Policy ="AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost("createUserAdmin")]
         public async Task<ActionResult<RegisterUserDto>> CreateUserAdmin(RegisterUserDto entity)
         {
@@ -156,9 +156,19 @@ namespace BarberGo.Controllers
                 return StatusCode(500, new { message = "Erro interno no servidor", detalhe = ex.Message });
             }
 
-            
+
 
         }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("GetUserByEmail")]
+        public async Task<ActionResult<AppUser>> getUserByEmail(string email)
+        {
+          var user =  await _userAccountServices.GetUserbyEmail(email);
+            return Ok(user);
+
+        }
+
 
 
         [Authorize]
