@@ -40,7 +40,7 @@ namespace BarberGo.Repositories
 
         }
 
-        public async Task<AppUser> UpdateUserToAdmin(AppUser appUser)
+        public async Task<AppUser> ToggleAdminStatus(AppUser appUser)
         {
              _dataContext.Update(appUser);
 
