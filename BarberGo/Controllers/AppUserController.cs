@@ -136,11 +136,11 @@ namespace BarberGo.Controllers
         }
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("PromoverUsuarioparaAdmin")]
-        public async Task<ActionResult<AppUser>> PromoveUserToAdmin(PromoteUserDto user)
+        public async Task<ActionResult<AppUser>> ToggleAdminStatus(PromoteUserDto user)
         {
             try
             {
-                await _userAccountServices.UpdateUserToAdmin(user.Email);
+                await _userAccountServices.ToggleAdminStatus(user.Email);
                 return Ok(user);
             }
             catch (InvalidOperationException ex)

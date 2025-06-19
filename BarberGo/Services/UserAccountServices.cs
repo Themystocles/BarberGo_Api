@@ -52,7 +52,7 @@ namespace BarberGo.Services
 
 
         }
-        public async Task<AppUser> UpdateUserToAdmin(string email)
+        public async Task<AppUser> ToggleAdminStatus(string email)
         {
             if(string.IsNullOrEmpty(email))
             {
@@ -65,13 +65,14 @@ namespace BarberGo.Services
             {
                 throw new InvalidOperationException("O Email informado está incorreto ou não existe");
             }
+            if (user.Type == TipoUsuario.Administrator)
+            {
+                user.Type = TipoUsuario.Client;
 
+            }
+            else { user.Type = TipoUsuario.Administrator; }
 
-            user.Type = TipoUsuario.Administrator;
-
-
-
-            await _userAccountRepositoty.UpdateUserToAdmin(user);
+            await _userAccountRepositoty.ToggleAdminStatus(user);
 
             return user;
 

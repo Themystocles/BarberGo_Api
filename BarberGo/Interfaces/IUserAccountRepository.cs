@@ -7,7 +7,7 @@ namespace BarberGo.Interfaces
         public Task<AppUser> CreateAdminAppUser(AppUser appUser);
         public Task<bool> EmailExistsAsync(string Email);
 
-        public Task<AppUser> UpdateUserToAdmin(AppUser appUser);
+        public Task<AppUser> ToggleAdminStatus(AppUser appUser);
 
         public Task<AppUser> GetUserByEmail(string email);
     }
