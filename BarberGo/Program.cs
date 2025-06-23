@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication;
+using BarberGo.Entities;
 
 namespace BarberGo
 {
@@ -29,6 +30,9 @@ namespace BarberGo
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
 
+            builder.Services.Configure<EmailSettings>(
+            builder.Configuration.GetSection("EmailSettings"));
+
             // Configuração do DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -45,6 +49,8 @@ namespace BarberGo
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             builder.Services.AddScoped<UserAccountServices>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 
             // Configuração do Swagger com JWT
