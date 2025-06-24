@@ -50,6 +50,8 @@ namespace BarberGo
             builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             builder.Services.AddScoped<UserAccountServices>();
             builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+            builder.Services.AddScoped<EmailServices>();
+
 
 
 
