@@ -15,23 +15,27 @@ public class AppointmentController : ControllerBase
     private readonly GenericRepositoryServices<Appointment> _service;
     private readonly IAppointmentRepository _repository;
     private readonly IMapper _mapper;
+    private readonly EmailServices _emailServices;
 
-    public AppointmentController(GenericRepositoryServices<Appointment> service, IMapper mapper, IAppointmentRepository repository)
+    public AppointmentController(GenericRepositoryServices<Appointment> service, IMapper mapper, IAppointmentRepository repository, EmailServices EmailService)
     {
         _service = service;
         _mapper = mapper;
         _repository = repository;
+        _emailServices = EmailService;
     }
 
     [HttpPost("create")]
     public async Task<IActionResult> Create(AppointmentDto dto)
     {
-        var entity = _mapper.Map<Appointment>(dto);
-
-        // Garante que o DateTime está em UTC
-      //  entity.DateTime = entity.DateTime.ToUniversalTime();
+        var entity = _mapper.Map<Appointment>(dto);     
 
         var result = await _service.CreateAsync(entity);
+
+        await _emailServices.SendAppointmentNotificationToBarberAsync(result);
+
+
+
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
     [HttpGet("Agendamentos")]
