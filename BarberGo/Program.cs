@@ -49,7 +49,7 @@ namespace BarberGo
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             builder.Services.AddScoped<UserAccountServices>();
-            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 
 

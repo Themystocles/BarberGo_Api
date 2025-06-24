@@ -6,9 +6,9 @@ namespace BarberGo.Controllers
 {
     public class EmailController : Controller
     {
-        private readonly IEmailService _emailService;
+        private readonly IEmailSender _emailService;
 
-        public EmailController(IEmailService emailService)
+        public EmailController(IEmailSender emailService)
         {
             _emailService = emailService;
         }
