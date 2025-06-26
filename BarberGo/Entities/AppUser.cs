@@ -16,7 +16,8 @@ namespace BarberGo.Entities
         public string? ProfilePictureUrl { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
         public TipoUsuario Type { get; set; }
-
+        public string? RecoveryCode { get; set; }
+        public DateTime? RecoveryCodeExpiration { get; set; }
         public bool IsMaster { get; set; } = false;
 }
 

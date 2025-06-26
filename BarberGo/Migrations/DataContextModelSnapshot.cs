@@ -56,6 +56,12 @@ namespace BarberGo.Migrations
                     b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("text");
 
+                    b.Property<string>("RecoveryCode")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RecoveryCodeExpiration")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
