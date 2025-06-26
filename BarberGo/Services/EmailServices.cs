@@ -26,6 +26,8 @@ namespace BarberGo.Services
                 .Include(a => a.Barber)
                 .FirstOrDefaultAsync(a => a.Id == appointment.Id);
 
+            // E-mail para o BARBEIRO
+
             string destine = appoint.Barber.Email;
             string subject = "Confirmação de agendamento";
             string body = $@"
@@ -65,6 +67,11 @@ namespace BarberGo.Services
 
 
 
+
+        }
+
+        public async Task SendCodeRecoveryPassword()
+        {
 
         }
 

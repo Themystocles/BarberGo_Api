@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication;
 using BarberGo.Entities;
+using BarberGo.Interfaces.BarberGo.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace BarberGo
 {
@@ -51,6 +53,9 @@ namespace BarberGo
             builder.Services.AddScoped<UserAccountServices>();
             builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
             builder.Services.AddScoped<EmailServices>();
+            builder.Services.AddScoped<IRecoveryPassword, RecoveryPasswordRepository>();
+            builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
+
 
 
 

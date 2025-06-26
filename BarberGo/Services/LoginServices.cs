@@ -17,7 +17,7 @@ namespace BarberGo.Services
         public async Task<string> LoginAppUser(LoginModel model)
         {
             var user = await _userRepository.GetUserByUsernameAsync(model.Email);
-            //|| user.PasswordHash != model.Password
+            
             if (user == null )
             {
                 return null;
