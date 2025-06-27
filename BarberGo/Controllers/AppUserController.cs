@@ -18,12 +18,14 @@ namespace BarberGo.Controllers
     {
         private readonly LoginServices _loginServices;
         private readonly UserAccountServices _userAccountServices;
+        private readonly EmailConfirmationServices _emailConfirmationServices;
 
-        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices, UserAccountServices userAccount)
+        public AppUserController(GenericRepositoryServices<AppUser> genericRepositoryServices, LoginServices loginServices, UserAccountServices userAccount, EmailConfirmationServices emailConfirmationServices)
               : base(genericRepositoryServices)
         {
             _loginServices = loginServices;
             _userAccountServices = userAccount;
+            _emailConfirmationServices = emailConfirmationServices;
         }
         public override Task<ActionResult<AppUser>> GetByIdAsync(int id)
         {
@@ -54,6 +56,15 @@ namespace BarberGo.Controllers
 
 
         }
+
+        [HttpPost("send-code")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendVerificationCode([FromBody] string email)
+        {
+            await _emailConfirmationServices.SendCodeverifyEmail(email);
+            return Ok(new { message = "Código enviado para o email." });
+        }
+
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<RegisterUserDto>> RegisterUser(RegisterUserDto entity)
@@ -76,7 +87,11 @@ namespace BarberGo.Controllers
                 return Conflict(new { message = ex.Message });
             }
 
-
+            var isVerified = await _emailConfirmationServices.VerificationEmail(entity.Email, entity.RecoveryCode);
+            if (!isVerified)
+            {
+                return BadRequest(new { message = "Código de verificação inválido ou expirado." });
+            }
 
             var appUser = new AppUser();
             appUser.Name = entity.Name;
