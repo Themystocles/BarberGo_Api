@@ -55,6 +55,8 @@ namespace BarberGo
             builder.Services.AddScoped<EmailServices>();
             builder.Services.AddScoped<IRecoveryPassword, RecoveryPasswordRepository>();
             builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
+            builder.Services.AddScoped<EmailConfirmationServices>();
+            
 
 
 

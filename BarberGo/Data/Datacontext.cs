@@ -16,6 +16,8 @@ namespace BarberGo.Data
         public DbSet<Feedback> Feedback { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<WeeklySchedule> weeklySchedules { get; set; }
+        public DbSet<EmailVerification> EmailVerification { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,9 +42,8 @@ namespace BarberGo.Data
                 .HasForeignKey(a => a.HaircutId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Define que o DateTime será salvo como timestamp without time zone
             modelBuilder.Entity<Appointment>()
-                .Property(a => a.DateTime)  // substitua "DateTime" pelo nome exato da propriedade
+                .Property(a => a.DateTime)  
                 .HasColumnType("timestamp without time zone");
         }
 

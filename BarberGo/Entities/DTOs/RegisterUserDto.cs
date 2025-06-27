@@ -24,5 +24,7 @@ namespace BarberGo.Entities.DTOs
         public string? ProfilePictureUrl { get; set; }
 
         public TipoUsuario Type { get; set; } = TipoUsuario.Client;
+
+        public string? RecoveryCode { get; set; }
     }
 }
