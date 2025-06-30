@@ -36,7 +36,8 @@ namespace BarberGo.Services
             };
 
             var emailExist = await _dataContext.EmailVerification.FirstOrDefaultAsync(x => x.Email == email);
-            if (emailExist == null)
+        
+            if (emailExist == null )
             {
                 _dataContext.EmailVerification.Add(emailveryfication);
 
@@ -46,7 +47,7 @@ namespace BarberGo.Services
                 return codigo;
 
             }
-            else 
+            else if(emailExist.Verified == false)
             {
                 emailExist.Code = codigo;
                 emailExist.Expiration = validade;   
@@ -57,6 +58,11 @@ namespace BarberGo.Services
                 await _dataContext.SaveChangesAsync();
 
                 return codigo;
+            }
+            else
+            {
+
+                throw new InvalidOperationException("E-mail já existe favor fazer login.");
             }
 
           
