@@ -35,12 +35,33 @@ namespace BarberGo.Services
                 Verified = false
             };
 
-            _dataContext.EmailVerification.Add(emailveryfication);
+            var emailExist = await _dataContext.EmailVerification.FirstOrDefaultAsync(x => x.Email == email);
+            if (emailExist == null)
+            {
+                _dataContext.EmailVerification.Add(emailveryfication);
 
-            await _emailSender.SendEmailAsync(email, "Código de recuperação", $"Seu código é: {codigo}");
-            await _dataContext.SaveChangesAsync();
+                await _emailSender.SendEmailAsync(email, "Código de recuperação", $"Seu código é: {codigo}");
+                await _dataContext.SaveChangesAsync();
 
-            return codigo;
+                return codigo;
+
+            }
+            else 
+            {
+                emailExist.Code = codigo;
+                emailExist.Expiration = validade;   
+                emailExist.Verified = false;
+
+                _dataContext.EmailVerification.Update(emailExist);
+                await _emailSender.SendEmailAsync(email, "Código de recuperação", $"Seu código é: {codigo}");
+                await _dataContext.SaveChangesAsync();
+
+                return codigo;
+            }
+
+          
+
+            
         }
         public async Task<bool> VerificationEmail(string email, string code)
         {
