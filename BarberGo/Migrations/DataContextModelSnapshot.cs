@@ -225,6 +225,47 @@ namespace BarberGo.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("BarberGo.Entities.SystemCustomization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BackgroundColor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("BackgroundUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CorPrimaria")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CorSecundaria")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LogoUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NomeSistema")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemCustomization");
+                });
+
             modelBuilder.Entity("BarberGo.Entities.WeeklySchedule", b =>
                 {
                     b.Property<int>("Id")

@@ -17,7 +17,12 @@ namespace BarberGo.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<WeeklySchedule> weeklySchedules { get; set; }
         public DbSet<EmailVerification> EmailVerification { get; set; }
+
+        public DbSet<SystemCustomization> SystemCustomization { get; set; }
+
+
         
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
