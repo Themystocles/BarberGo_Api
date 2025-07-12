@@ -20,6 +20,13 @@ namespace BarberGo.Controllers
             var entities = await _genericRepositoryServices.GetList();
             return Ok(entities);
         }
+        [AllowAnonymous]
+        [HttpGet("find/{id}")]
+        public override async Task<ActionResult<SystemCustomization>> GetByIdAsync(int id)
+        {
+            var entityExist = await _genericRepositoryServices.GetByIdAsync(id);
+            return Ok(entityExist);
+        }
 
 
 
