@@ -28,6 +28,15 @@ namespace BarberGo.Controllers
             return Ok(entityExist);
         }
 
+        [HttpPut("update/{id}")]
+        public override async Task<ActionResult<SystemCustomization>> UpdateEntity(int id, SystemCustomization entity)
+        {
+            Console.WriteLine($"Recebido update para id {id} com nomeSistema={entity.NomeSistema}");
+            
+
+            return await base.UpdateEntity(id, entity);
+        }
+
 
 
     }
