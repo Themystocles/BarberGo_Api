@@ -27,14 +27,31 @@ namespace BarberGo.Controllers
             var entityExist = await _genericRepositoryServices.GetByIdAsync(id);
             return Ok(entityExist);
         }
-
+        [AllowAnonymous]
         [HttpPut("update/{id}")]
         public override async Task<ActionResult<SystemCustomization>> UpdateEntity(int id, SystemCustomization entity)
         {
-            Console.WriteLine($"Recebido update para id {id} com nomeSistema={entity.NomeSistema}");
-            
+            if (id != entity.Id)
+                return BadRequest("ID da URL diferente do ID do objeto.");
 
-            return await base.UpdateEntity(id, entity);
+            // Buscar a entidade existente no banco
+            var existingEntity = await _genericRepositoryServices.GetByIdAsync(id);
+            if (existingEntity == null)
+                return NotFound();
+
+            // Atualizar campo a campo (evita problemas de tracking e valores indesejados)
+            existingEntity.NomeSistema = entity.NomeSistema?.Trim();
+            existingEntity.CorPrimaria = entity.CorPrimaria?.Trim();
+            existingEntity.CorSecundaria = entity.CorSecundaria?.Trim();
+            existingEntity.BackgroundColor = entity.BackgroundColor?.Trim();
+            existingEntity.LogoUrl = entity.LogoUrl;
+            existingEntity.BackgroundUrl = entity.BackgroundUrl;
+            existingEntity.Descricao = entity.Descricao;
+
+            // Chama o serviço para atualizar (ele deve usar o Update genérico do EF)
+            await _genericRepositoryServices.UpdateAsync(existingEntity);
+
+            return Ok(existingEntity);
         }
 
 
