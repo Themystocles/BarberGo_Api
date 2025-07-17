@@ -46,6 +46,7 @@ namespace BarberGo.Controllers
             existingEntity.BackgroundColor = entity.BackgroundColor?.Trim();
             existingEntity.LogoUrl = entity.LogoUrl;
             existingEntity.BackgroundUrl = entity.BackgroundUrl;
+            existingEntity.CardsColors = entity.CardsColors;
             existingEntity.Descricao = entity.Descricao;
 
             // Chama o serviço para atualizar (ele deve usar o Update genérico do EF)
