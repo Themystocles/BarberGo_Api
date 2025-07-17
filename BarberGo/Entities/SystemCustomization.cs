@@ -11,7 +11,7 @@ namespace BarberGo.Entities
         public string CorSecundaria { get; set; }
         public string BackgroundUrl { get; set; }
         public string BackgroundColor { get; set; }
-        public string cardsColors { get; set; }
+        public string CardsColors { get; set; }
         public string Descricao { get; set; }
         
     }
