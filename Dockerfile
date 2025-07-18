@@ -3,16 +3,16 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
 # Copiar o arquivo .csproj para /app
-COPY BarberGo/BarberGo.csproj ./
+COPY Api/Api.csproj ./
 
 # Restaurar dependências
-RUN dotnet restore BarberGo.csproj
+RUN dotnet restore Api.csproj
 
-# Copiar todo o código da pasta BarberGo
-COPY BarberGo/. ./
+# Copiar todo o código da pasta Api
+COPY Api/. ./
 
 # Publicar o projeto
-RUN dotnet publish BarberGo.csproj -c Release -o /app/out
+RUN dotnet publish Api.csproj -c Release -o /app/out
 
 # Etapa de runtime
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
@@ -21,4 +21,4 @@ WORKDIR /app
 # Copiar arquivos publicados da etapa de build
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["dotnet", "BarberGo.dll"]
+ENTRYPOINT ["dotnet", "Api.dll"]
