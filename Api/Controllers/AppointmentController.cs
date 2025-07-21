@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Api.DTOs;
-using Api.Entities;
-using Api.Entities.DTOs;
-using Api.Interfaces;
+using Domain.Entities;
+using Domain.Entities.DTOs;
+using Domain.Interfaces;
 using Api.Repositories;
 using Api.Services;
 using Microsoft.AspNetCore.Authorization;

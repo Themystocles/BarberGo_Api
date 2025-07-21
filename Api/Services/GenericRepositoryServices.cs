@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Api.Interfaces;
+using Domain.Interfaces;
 using Api.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,6 @@
-﻿using Api.Entities;
-using Api.Entities.DTOs;
-using Api.Interfaces;
+﻿using Domain.Entities;
+using Domain.Entities.DTOs;
+using Domain.Interfaces;
 
 namespace Api.Services
 {

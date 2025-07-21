@@ -77,3 +77,9 @@ C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\obj\Debug\net7.0\r
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\obj\Debug\net7.0\Api.pdb
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\obj\Debug\net7.0\Api.genruntimeconfig.cache
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\obj\Debug\net7.0\ref\Api.dll
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\bin\Debug\net7.0\Application.dll
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\bin\Debug\net7.0\Application.pdb
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\bin\Debug\net7.0\Domain.dll
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\bin\Debug\net7.0\Persistence.dll
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\bin\Debug\net7.0\Domain.pdb
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Api\bin\Debug\net7.0\Persistence.pdb

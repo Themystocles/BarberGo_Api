@@ -1,4 +1,4 @@
-﻿using Api.Entities;
+﻿using Domain.Entities;
 using Api.Repositories;
 using Microsoft.AspNetCore.Identity;
 

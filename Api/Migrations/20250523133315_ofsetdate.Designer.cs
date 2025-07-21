@@ -25,7 +25,7 @@ namespace Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Api.Entities.AppUser", b =>
+            modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace Api.Migrations
                     b.ToTable("AppUsers");
                 });
 
-            modelBuilder.Entity("Api.Entities.Appointment", b =>
+            modelBuilder.Entity("Domain.Entities.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,7 +99,7 @@ namespace Api.Migrations
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("Api.Entities.Feedback", b =>
+            modelBuilder.Entity("Domain.Entities.Feedback", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,7 +129,7 @@ namespace Api.Migrations
                     b.ToTable("Feedback");
                 });
 
-            modelBuilder.Entity("Api.Entities.Haircut", b =>
+            modelBuilder.Entity("Domain.Entities.Haircut", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,7 +156,7 @@ namespace Api.Migrations
                     b.ToTable("Haircuts");
                 });
 
-            modelBuilder.Entity("Api.Entities.Payment", b =>
+            modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,7 +192,7 @@ namespace Api.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("Api.Entities.WeeklySchedule", b =>
+            modelBuilder.Entity("Domain.Entities.WeeklySchedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,21 +222,21 @@ namespace Api.Migrations
                     b.ToTable("weeklySchedules");
                 });
 
-            modelBuilder.Entity("Api.Entities.Appointment", b =>
+            modelBuilder.Entity("Domain.Entities.Appointment", b =>
                 {
-                    b.HasOne("Api.Entities.AppUser", "Barber")
+                    b.HasOne("Domain.Entities.AppUser", "Barber")
                         .WithMany()
                         .HasForeignKey("BarberId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Api.Entities.AppUser", "Client")
+                    b.HasOne("Domain.Entities.AppUser", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Api.Entities.Haircut", "Haircut")
+                    b.HasOne("Domain.Entities.Haircut", "Haircut")
                         .WithMany()
                         .HasForeignKey("HaircutId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -249,15 +249,15 @@ namespace Api.Migrations
                     b.Navigation("Haircut");
                 });
 
-            modelBuilder.Entity("Api.Entities.Feedback", b =>
+            modelBuilder.Entity("Domain.Entities.Feedback", b =>
                 {
-                    b.HasOne("Api.Entities.Appointment", "Appointment")
+                    b.HasOne("Domain.Entities.Appointment", "Appointment")
                         .WithMany()
                         .HasForeignKey("AppointmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Entities.AppUser", "Client")
+                    b.HasOne("Domain.Entities.AppUser", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -268,15 +268,15 @@ namespace Api.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("Api.Entities.Payment", b =>
+            modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
-                    b.HasOne("Api.Entities.Appointment", "Appointment")
+                    b.HasOne("Domain.Entities.Appointment", "Appointment")
                         .WithMany()
                         .HasForeignKey("AppointmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Entities.AppUser", "Client")
+                    b.HasOne("Domain.Entities.AppUser", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -287,9 +287,9 @@ namespace Api.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("Api.Entities.WeeklySchedule", b =>
+            modelBuilder.Entity("Domain.Entities.WeeklySchedule", b =>
                 {
-                    b.HasOne("Api.Entities.AppUser", "Barber")
+                    b.HasOne("Domain.Entities.AppUser", "Barber")
                         .WithMany()
                         .HasForeignKey("BarberId");
 

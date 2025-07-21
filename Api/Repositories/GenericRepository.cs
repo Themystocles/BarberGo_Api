@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Api.Interfaces;
+using Domain.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Api.Data;

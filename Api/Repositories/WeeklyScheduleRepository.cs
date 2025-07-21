@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Api.Data;
-using Api.Entities;
-using Api.Entities.DTOs;
-using Api.Interfaces;
+using Domain.Entities;
+using Domain.Entities.DTOs;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 

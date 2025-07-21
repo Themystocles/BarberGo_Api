@@ -1,7 +1,7 @@
 ﻿using Api.Data;
-using Api.Entities;
-using Api.Interfaces;
-using Api.Interfaces.Api.Interfaces;
+using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Interfaces.Domain.Interfaces;
 using Api.Services;
 using Microsoft.AspNetCore.Identity;
 

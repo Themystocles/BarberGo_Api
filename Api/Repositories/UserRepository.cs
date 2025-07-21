@@ -1,5 +1,5 @@
-﻿using Api.Entities;
-using Api.Interfaces;
+﻿using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 public class UserRepository : IUserRepository

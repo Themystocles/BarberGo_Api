@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Api.Entities;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System;
 using Api.Data;
