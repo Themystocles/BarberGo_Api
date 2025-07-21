@@ -1,4 +1,4 @@
-﻿using Api.Interfaces;
+﻿using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 

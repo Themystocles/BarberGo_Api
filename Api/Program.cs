@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Api.Data;
-using Api.Interfaces;
+using Domain.Interfaces;
 using Api.Repositories;
 using Api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication;
-using Api.Entities;
-using Api.Interfaces.Api.Interfaces;
+using Domain.Entities;
+using Domain.Interfaces.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Api

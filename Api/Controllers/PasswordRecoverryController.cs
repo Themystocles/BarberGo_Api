@@ -1,5 +1,5 @@
-﻿using Api.Entities.DTOs;
-using Api.Interfaces.Api.Interfaces;
+﻿using Domain.Entities.DTOs;
+using Domain.Interfaces.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
 

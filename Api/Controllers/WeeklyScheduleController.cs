@@ -1,6 +1,6 @@
-﻿using Api.Entities;
-using Api.Entities.DTOs;
-using Api.Interfaces;
+﻿using Domain.Entities;
+using Domain.Entities.DTOs;
+using Domain.Interfaces;
 using Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

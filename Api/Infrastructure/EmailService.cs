@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using Api.Entities;
-using Api.Interfaces;
+using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.Extensions.Options;
 
 public class SmtpEmailSender : IEmailSender

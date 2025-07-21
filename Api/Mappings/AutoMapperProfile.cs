@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Api.DTOs;
-using Api.Entities;
+using Domain.Entities;
 
 
 public class AutoMapperProfile : Profile

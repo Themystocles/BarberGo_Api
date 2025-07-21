@@ -1,4 +1,4 @@
-﻿using Api.Entities;
+﻿using Domain.Entities;
 using Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

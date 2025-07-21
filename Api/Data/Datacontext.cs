@@ -1,4 +1,4 @@
-﻿using Api.Entities;
+﻿using Domain.Entities;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -21,7 +21,7 @@ namespace Api.Data
         public DbSet<SystemCustomization> SystemCustomization { get; set; }
 
 
-        
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,11 +48,16 @@ namespace Api.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Appointment>()
-                .Property(a => a.DateTime)  
+                .Property(a => a.DateTime)
                 .HasColumnType("timestamp without time zone");
+
+            modelBuilder.Entity<Haircut>()
+                .Property(h => h.Preco)
+                .HasPrecision(10, 2);
         }
 
 
-    
+
+
     }
 }

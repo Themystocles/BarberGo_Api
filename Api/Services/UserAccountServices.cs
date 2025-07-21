@@ -1,9 +1,9 @@
-﻿using Api.Entities;
-using Api.Interfaces;
+﻿using Domain.Entities;
+using Domain.Interfaces;
 using Api.Repositories;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity;
-using Api.Entities.DTOs;
+using Domain.Entities.DTOs;
 using System.Security;
 
 namespace Api.Services

@@ -1,11 +1,49 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {}
+    "net7.0": {
+      "Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Domain.dll": {}
+        }
+      },
+      "Persistence/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Persistence.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Persistence.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Domain/1.0.0": {
+      "type": "project",
+      "path": "../Domain/Domain.csproj",
+      "msbuildProject": "../Domain/Domain.csproj"
+    },
+    "Persistence/1.0.0": {
+      "type": "project",
+      "path": "../Persistence/Persistence.csproj",
+      "msbuildProject": "../Persistence/Persistence.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net7.0": []
+    "net7.0": [
+      "Domain >= 1.0.0",
+      "Persistence >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\themy\\.nuget\\packages\\": {}
@@ -33,7 +71,14 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj"
+            },
+            "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\Persistence.csproj": {
+              "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\Persistence.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
