@@ -5,7 +5,7 @@ using System.Security.Claims;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System;
-using Api.Data;
+using Persistence.Data;
 
 [ApiController]
 [Route("auth")]

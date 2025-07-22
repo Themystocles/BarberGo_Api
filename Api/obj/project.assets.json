@@ -755,7 +755,7 @@
           }
         }
       },
-      "Npgsql/7.0.6": {
+      "Npgsql/7.0.7": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
@@ -771,13 +771,13 @@
           }
         }
       },
-      "Npgsql.EntityFrameworkCore.PostgreSQL/7.0.11": {
+      "Npgsql.EntityFrameworkCore.PostgreSQL/7.0.18": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "[7.0.11, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.11, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Relational": "[7.0.11, 8.0.0)",
-          "Npgsql": "7.0.6"
+          "Microsoft.EntityFrameworkCore": "[7.0.18, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.18, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Relational": "[7.0.18, 8.0.0)",
+          "Npgsql": "7.0.7"
         },
         "compile": {
           "lib/net7.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
@@ -1257,7 +1257,9 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Domain": "1.0.0"
+          "Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "7.0.20",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18"
         },
         "compile": {
           "bin/placeholder/Persistence.dll": {}
@@ -2553,10 +2555,10 @@
         "packageIcon.png"
       ]
     },
-    "Npgsql/7.0.6": {
-      "sha512": "TAqvwRnm3NJ0QvN7cvu6geJkbI0XPzGVRElVY5hF4gsgA+BnE12x6GM1TLhdeq+7ZKvvo3BD8jXKnXmr3tvdEw==",
+    "Npgsql/7.0.7": {
+      "sha512": "A3BjyNebHjw/MahM6n3VnKbxrj/hQnMROEkUNUTjhUVv7yvcGnfBgw/FszahT9uCR23AVD2N/0Tvw1aHgxr9Gg==",
       "type": "package",
-      "path": "npgsql/7.0.6",
+      "path": "npgsql/7.0.7",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2573,15 +2575,15 @@
         "lib/netstandard2.0/Npgsql.xml",
         "lib/netstandard2.1/Npgsql.dll",
         "lib/netstandard2.1/Npgsql.xml",
-        "npgsql.7.0.6.nupkg.sha512",
+        "npgsql.7.0.7.nupkg.sha512",
         "npgsql.nuspec",
         "postgresql.png"
       ]
     },
-    "Npgsql.EntityFrameworkCore.PostgreSQL/7.0.11": {
-      "sha512": "cHEgEz0ldXc9wVANs8sJqC+3eilqefrkasCBgaVT0tyj8tb1p3/pwy2ngjboNkDG3M0z+xJsJ4jC5p8wySAM3w==",
+    "Npgsql.EntityFrameworkCore.PostgreSQL/7.0.18": {
+      "sha512": "W+mFtJ1D4kSsCIBMScaq3tq8jdoR0Healb6knhSKqnlIoGGQwkHltHMsFeWacieLQPA+e4UrIgucfDpRpRXQRA==",
       "type": "package",
-      "path": "npgsql.entityframeworkcore.postgresql/7.0.11",
+      "path": "npgsql.entityframeworkcore.postgresql/7.0.18",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2590,7 +2592,7 @@
         "lib/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.xml",
         "lib/net7.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll",
         "lib/net7.0/Npgsql.EntityFrameworkCore.PostgreSQL.xml",
-        "npgsql.entityframeworkcore.postgresql.7.0.11.nupkg.sha512",
+        "npgsql.entityframeworkcore.postgresql.7.0.18.nupkg.sha512",
         "npgsql.entityframeworkcore.postgresql.nuspec",
         "postgresql.png"
       ]
@@ -3609,7 +3611,7 @@
       "Microsoft.EntityFrameworkCore >= 7.0.20",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.20",
       "Microsoft.Extensions.Caching.StackExchangeRedis >= 9.0.5",
-      "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.5",
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.18",
       "SendGrid >= 9.29.3",
       "Swashbuckle.AspNetCore >= 7.*"
     ]
@@ -3694,7 +3696,7 @@
           },
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
-            "version": "[7.0.5, )"
+            "version": "[7.0.18, )"
           },
           "SendGrid": {
             "target": "Package",
@@ -3727,17 +3729,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Api depende de Npgsql.EntityFrameworkCore.PostgreSQL (>= 7.0.5), mas Npgsql.EntityFrameworkCore.PostgreSQL 7.0.5 não foi encontrado. A melhor correspondência aproximada de Npgsql.EntityFrameworkCore.PostgreSQL 7.0.11 foi resolvida.",
-      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  }
 }
