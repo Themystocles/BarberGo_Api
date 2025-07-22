@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Api.Data;
+using Persistence.Data;
 using Domain.Interfaces;
 using Api.Repositories;
 using Api.Services;

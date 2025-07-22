@@ -2,7 +2,7 @@
 using Domain.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Api.Data;
+using Persistence.Data;
 
 namespace Api.Repositories
 {
