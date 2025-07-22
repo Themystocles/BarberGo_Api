@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
-using Api.Repositories;
+using Persistence.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Services
+namespace Application.Services
 {
     public class GenericRepositoryServices<T> where T : class, IEntity
     {

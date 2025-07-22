@@ -1,12 +1,12 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
-using Api.Repositories;
+using Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities.DTOs;
 using System.Security;
 
-namespace Api.Services
+namespace Application.Services
 {
     public class UserAccountServices
     {

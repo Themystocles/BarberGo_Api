@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Runtime.Serialization.DataContracts;
 
-namespace Api.Repositories
+namespace Persistence.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
     {

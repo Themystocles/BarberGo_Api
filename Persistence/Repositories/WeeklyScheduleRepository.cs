@@ -3,10 +3,10 @@ using Persistence.Data;
 using Domain.Entities;
 using Domain.Entities.DTOs;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
+//using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Repositories
+namespace Persistence.Repositories
 {
     public class WeeklyScheduleRepository : IWeeklySchedule
     {

@@ -2,7 +2,7 @@
 using Domain.Entities.DTOs;
 using Domain.Interfaces;
 
-namespace Api.Services
+namespace Application.Services
 {
     public class AppointmentServices
     {

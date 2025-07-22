@@ -3,7 +3,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Api.Repositories
+namespace Persistence.Repositories
 {
     public class LoginUserRepository
     {
