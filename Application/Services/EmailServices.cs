@@ -4,7 +4,7 @@ using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Api.Services
+namespace Application.Services
 {
     public class EmailServices
     {

@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Entities.DTOs;
 using Domain.Interfaces;
-using Api.Services;
+using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

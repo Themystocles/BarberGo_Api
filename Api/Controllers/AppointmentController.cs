@@ -3,8 +3,8 @@ using Api.DTOs;
 using Domain.Entities;
 using Domain.Entities.DTOs;
 using Domain.Interfaces;
-using Api.Repositories;
-using Api.Services;
+using Persistence.Repositories;
+using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

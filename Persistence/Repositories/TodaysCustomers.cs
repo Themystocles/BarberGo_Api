@@ -4,7 +4,7 @@ using Domain.Entities.DTOs;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Repositories
+namespace Persistence.Repositories
 {
     public class TodaysCustomers : ITodaysCustomers
     {

@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
-using Api.Repositories;
+using Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 
-namespace Api.Services
+namespace Application.Services
 {
     public class LoginServices
     {

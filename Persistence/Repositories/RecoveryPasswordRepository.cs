@@ -2,10 +2,10 @@
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Interfaces.Domain.Interfaces;
-using Api.Services;
+//using Application.Services;
 using Microsoft.AspNetCore.Identity;
 
-namespace Api.Repositories
+namespace Persistence.Repositories
 {
     public class RecoveryPasswordRepository : IRecoveryPassword
     {
