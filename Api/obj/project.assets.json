@@ -1404,9 +1404,9 @@
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "Domain": "1.0.0",
+          "Infrastructure": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.20",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "7.0.20",
-          "Persistence": "1.0.0",
           "Swashbuckle.AspNetCore": "7.3.2"
         },
         "compile": {
@@ -1426,7 +1426,7 @@
           "bin/placeholder/Domain.dll": {}
         }
       },
-      "Persistence/1.0.0": {
+      "Infrastructure/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
@@ -1438,10 +1438,10 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18"
         },
         "compile": {
-          "bin/placeholder/Persistence.dll": {}
+          "bin/placeholder/Infrastructure.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Persistence.dll": {}
+          "bin/placeholder/Infrastructure.dll": {}
         }
       }
     }
@@ -3919,10 +3919,10 @@
       "path": "../Domain/Domain.csproj",
       "msbuildProject": "../Domain/Domain.csproj"
     },
-    "Persistence/1.0.0": {
+    "Infrastructure/1.0.0": {
       "type": "project",
-      "path": "../Persistence/Persistence.csproj",
-      "msbuildProject": "../Persistence/Persistence.csproj"
+      "path": "../Infrastructure/Infrastructure.csproj",
+      "msbuildProject": "../Infrastructure/Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
