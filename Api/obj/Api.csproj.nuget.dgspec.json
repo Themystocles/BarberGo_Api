@@ -142,8 +142,8 @@
               "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj": {
                 "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj"
               },
-              "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\Persistence.csproj": {
-                "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\Persistence.csproj"
+              "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -250,14 +250,14 @@
         }
       }
     },
-    "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\Persistence.csproj": {
+    "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\Persistence.csproj",
-        "projectName": "Persistence",
-        "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\Persistence.csproj",
+        "projectUniqueName": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj",
+        "projectName": "Infrastructure",
+        "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\themy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Persistence\\obj\\",
+        "outputPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\themy\\AppData\\Roaming\\NuGet\\NuGet.Config",
