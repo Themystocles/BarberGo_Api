@@ -56,7 +56,10 @@ namespace Api
             builder.Services.AddScoped<IRecoveryPassword, RecoveryPasswordRepository>();
             builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
             builder.Services.AddScoped<EmailConfirmationServices>();
-            
+            builder.Services.AddScoped<ILoginUserRepository, LoginUserRepository>();
+            builder.Services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+
+
 
 
 

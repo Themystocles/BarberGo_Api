@@ -2,10 +2,11 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Domain.Interfaces;
 
 namespace Persistence.Repositories
 {
-    public class LoginUserRepository
+    public class LoginUserRepository : ILoginUserRepository
     {
         private readonly DataContext _context;
 

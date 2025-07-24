@@ -1,4 +1,5 @@
 ﻿
+using Domain.Entities;
 using Domain.Entities.DTOs;
 
 namespace Domain.Interfaces
@@ -10,5 +11,7 @@ namespace Domain.Interfaces
         Task<List<MyAppointmentDto>> GetHistoryAppointment(int idUser, DateTime? date);
 
         Task<List<MyAppointmentDto>> GetMyAppointmentsHistorybyBarberId (int barberId, DateTime? date );
+
+        Task<Appointment?> GetAppointmentWithDetailsAsync(int id);
     }
 }

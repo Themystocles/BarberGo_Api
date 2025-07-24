@@ -31,6 +31,9 @@
             "projectReferences": {
               "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Application\\Application.csproj": {
                 "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Application\\Application.csproj"
+              },
+              "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -141,9 +144,6 @@
             "projectReferences": {
               "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj": {
                 "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj"
-              },
-              "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -274,6 +274,9 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
+              "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Application\\Application.csproj"
+              },
               "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj": {
                 "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Domain\\Domain.csproj"
               }
@@ -292,7 +295,7 @@
           "dependencies": {
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
-              "version": "[12.0.0, )"
+              "version": "[12.0.1, )"
             },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",

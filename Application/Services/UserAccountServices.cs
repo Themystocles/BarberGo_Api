@@ -1,6 +1,5 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
-using Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities.DTOs;

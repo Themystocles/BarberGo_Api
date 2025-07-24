@@ -15,3 +15,5 @@ C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Infrastructure\obj\Deb
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Infrastructure\obj\Debug\net7.0\Infrastructure.pdb
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Infrastructure\obj\Debug\net7.0\Infrastructure.genruntimeconfig.cache
 C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Infrastructure\obj\Debug\net7.0\ref\Infrastructure.dll
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Infrastructure\bin\Debug\net7.0\Application.dll
+C:\Users\themy\OneDrive\Documentos\Programação\BarberGo\Infrastructure\bin\Debug\net7.0\Application.pdb
