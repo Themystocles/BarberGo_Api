@@ -42,6 +42,15 @@ namespace Persistence.Repositories
 
         }
 
+        public async Task<Appointment?> GetAppointmentWithDetailsAsync(int appointmentId)
+        {
+            return await _dataContext.Appointments
+                .Include(c => c.Client)
+                .Include(h => h.Haircut)
+                .Include(b => b.Barber)
+                .FirstOrDefaultAsync(a => a.Id == appointmentId);
+        }
+
         public async Task<List<MyAppointmentDto>> GetHistoryAppointment(int idUser, DateTime? date = null)
         {
             var query = _dataContext.Appointments

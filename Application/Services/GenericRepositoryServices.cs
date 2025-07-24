@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
-using Persistence.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 

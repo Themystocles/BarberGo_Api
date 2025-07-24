@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using Persistence.Repositories;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services
@@ -7,39 +7,36 @@ namespace Application.Services
     public class LoginServices
     {
         private readonly TokenService _tokenService;
-        private readonly LoginUserRepository _userRepository;
+        private readonly ILoginUserRepository _userRepository;
 
-        public LoginServices(TokenService tokenService, LoginUserRepository userRepository)
+        public LoginServices(TokenService tokenService, ILoginUserRepository userRepository)
         {
             _tokenService = tokenService;
             _userRepository = userRepository;
         }
-        public async Task<string> LoginAppUser(LoginModel model)
+
+        public async Task<string?> LoginAppUser(LoginModel model)
         {
             var user = await _userRepository.GetUserByUsernameAsync(model.Email);
-            
-            if (user == null )
-            {
+
+            if (user == null)
                 return null;
-            }
+
             var passwordHasher = new PasswordHasher<AppUser>();
             var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
 
             if (result == PasswordVerificationResult.Failed)
-            {
                 return null;
-            }
 
             return _tokenService.GenerateToken(user.Email, user.Type);
         }
+
         public async Task<AppUser?> GetUserProfileByEmailAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("Email inválido.");
 
-            var user = await _userRepository.GetUserByEmail(email);
-
-            return user;
+            return await _userRepository.GetUserByEmail(email);
         }
     }
 }

@@ -1404,7 +1404,6 @@
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "Domain": "1.0.0",
-          "Infrastructure": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.20",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "7.0.20",
           "Swashbuckle.AspNetCore": "7.3.2"
@@ -1430,7 +1429,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.0",
+          "Application": "1.0.0",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "Domain": "1.0.0",
           "Microsoft.AspNetCore.Http": "2.3.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "7.0.20",
@@ -3929,6 +3929,7 @@
     "net7.0": [
       "Application >= 1.0.0",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
+      "Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.Google >= 7.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 7.*",
       "Microsoft.AspNetCore.DataProtection.StackExchangeRedis >= 9.0.5",
@@ -3971,6 +3972,9 @@
           "projectReferences": {
             "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Application\\Application.csproj": {
               "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Application\\Application.csproj"
+            },
+            "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj"
             }
           }
         }
