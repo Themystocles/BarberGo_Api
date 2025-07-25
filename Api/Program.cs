@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication;
 using Domain.Entities;
 using Domain.Interfaces.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Application.Interfaces;
 
 namespace Api
 {
@@ -58,6 +59,8 @@ namespace Api
             builder.Services.AddScoped<EmailConfirmationServices>();
             builder.Services.AddScoped<ILoginUserRepository, LoginUserRepository>();
             builder.Services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<TokenService>();
 
 
 

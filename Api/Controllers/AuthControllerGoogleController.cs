@@ -2,22 +2,18 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System;
-using Persistence.Data;
+using Application.Interfaces;
 
 [ApiController]
 [Route("auth")]
 public class AuthGoogleController : ControllerBase
 {
-    private readonly TokenService _tokenService;
-    private readonly DataContext _context;
+    private readonly IAuthService _authService;
 
-    public AuthGoogleController(TokenService tokenService, DataContext context)
+    public AuthGoogleController(IAuthService authService)
     {
-        _tokenService = tokenService;
-        _context = context;
+        _authService = authService;
     }
 
     [HttpGet("google-login")]
@@ -40,46 +36,12 @@ public class AuthGoogleController : ControllerBase
         var nome = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
         var fotoPerfil = claims?.FirstOrDefault(c => c.Type == "picture")?.Value;
 
-        Console.WriteLine("Foto de perfil do Google: " + fotoPerfil);
-
         if (string.IsNullOrEmpty(email))
             return BadRequest("Email não fornecido pelo Google.");
 
-        // Busca usuário existente
-        var usuario = _context.AppUsers.FirstOrDefault(u => u.Email == email);
-
-        if (usuario == null)
-        {
-            // Cria novo usuário
-            usuario = new AppUser
-            {
-                Name = nome,
-                Email = email,
-                Type = TipoUsuario.Client, 
-                ProfilePictureUrl = fotoPerfil
-            };
-
-            _context.AppUsers.Add(usuario);
-            await _context.SaveChangesAsync();
-        }
-        else
-        {
-            
-
-            if (string.IsNullOrEmpty(usuario.ProfilePictureUrl))
-            {
-                usuario.ProfilePictureUrl = fotoPerfil;
-                _context.AppUsers.Update(usuario);
-                await _context.SaveChangesAsync();
-            }
-            
-        }
-
-        var token = _tokenService.GenerateToken(usuario.Email, usuario.Type);
+        var token = await _authService.AutenticarOuRegistrarUsuarioGoogleAsync(email, nome, fotoPerfil);
 
         var frontendUrl = "https://barbergo-ui.onrender.com/login-success";
         return Redirect($"{frontendUrl}?token={token}");
-
-        //teste
     }
 }
