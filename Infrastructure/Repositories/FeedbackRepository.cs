@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.DTOs;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
@@ -22,14 +23,22 @@ namespace Infrastructure.Repositories
 
       
 
-        public async Task<List<Feedback>> ShowFeedbackByBarberId(int barberId)
+        public async Task<List<FeedbackDto>> ShowFeedbackByBarberId(int barberId)
         {
-            var feedback = await _context.Feedback
-                .Where(f => f.BarberId == barberId)
-                .ToListAsync();
+            var feedbackDtos = await _context.Feedback
+        .Where(f => f.BarberId == barberId)
+        .Select(f => new FeedbackDto
+        {
+            Id = f.Id,
+            AppUserId = f.AppUserId,
+            BarberId = f.BarberId,
+            Rating = f.Rating,
+            Comment = f.Comment
+        })
+        .ToListAsync();
 
-            return feedback;
-            
+            return feedbackDtos;
+
         }
     }
 }
