@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class UserRepository : IUserRepository
 {
-    private readonly DbContext _context;  // Ou seu contexto específico
-
+    private readonly DbContext _context;  
     public UserRepository(DbContext context)
     {
         _context = context;
