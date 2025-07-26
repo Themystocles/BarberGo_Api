@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Domain.Interfaces
 {
     public interface IFeedback
     {
-        Task<List<Feedback>> ShowFeedbackByBarberId(int barberId);
+        Task<List<FeedbackDto>> ShowFeedbackByBarberId(int barberId);
 
       
         

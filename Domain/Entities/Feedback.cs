@@ -10,7 +10,7 @@ namespace Domain.Entities
         public int BarberId { get; set; }
         public int Rating { get; set; } 
         public string Comment { get; set; }
-        public AppUser Client { get; set; }
-        public BarberDto Barber { get; set; }
+        public AppUser? Client { get; set; }
+        public BarberDto? Barber { get; set; }
     }
 }
