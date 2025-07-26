@@ -20,12 +20,31 @@ namespace Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("get/{barberId}")]  // padrão camelCase e nome consistente
+        [HttpGet("get/{barberId}")]  
         public async Task<IActionResult> GetFeedbacksByBarberIdAsync(int barberId)
         {
             var feedbacks = await _feedbackServices.ShowFeedbackByBarberId(barberId);
 
             return Ok(feedbacks);
         }
+        [HttpPost("create")]
+        public async Task<ActionResult<Feedback>> CreateEntity([FromBody] FeedbackDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var feedback = new Feedback
+            {
+                AppUserId = dto.AppUserId,
+                BarberId = dto.BarberId,
+                Rating = dto.Rating,
+                Comment = dto.Comment,
+             
+            };
+
+            var createdEntity = await _genericRepositoryServices.CreateAsync(feedback);
+            return Created("", createdEntity);
+        }
+
     }
 }
