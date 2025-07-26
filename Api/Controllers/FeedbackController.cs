@@ -27,24 +27,7 @@ namespace Api.Controllers
 
             return Ok(feedbacks);
         }
-        [HttpPost("create")]
-        public async Task<ActionResult<Feedback>> CreateEntity([FromBody] FeedbackDto dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var feedback = new Feedback
-            {
-                AppUserId = dto.AppUserId,
-                BarberId = dto.BarberId,
-                Rating = dto.Rating,
-                Comment = dto.Comment,
-             
-            };
-
-            var createdEntity = await _genericRepositoryServices.CreateAsync(feedback);
-            return Created("", createdEntity);
-        }
+    
 
     }
 }
