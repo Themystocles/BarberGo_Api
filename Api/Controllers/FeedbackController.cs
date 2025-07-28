@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,15 @@ namespace Api.Controllers
 
             return Ok(feedbacks);
         }
-    
+        [AllowAnonymous]
+        [HttpPost("create-feedback")]
+        public virtual async Task<ActionResult<Feedback>> CreateEntity(FeedbackDto dto)
+        {
+            var createdFeedback = await _feedbackServices.Createfeedback(dto);
+
+            return Created("", createdFeedback);
+        }
+
 
     }
 }

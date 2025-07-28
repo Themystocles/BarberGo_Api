@@ -17,13 +17,7 @@ namespace Persistence.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<WeeklySchedule> weeklySchedules { get; set; }
         public DbSet<EmailVerification> EmailVerification { get; set; }
-
         public DbSet<SystemCustomization> SystemCustomization { get; set; }
-
-
-
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -54,6 +48,17 @@ namespace Persistence.Data
             modelBuilder.Entity<Haircut>()
                 .Property(h => h.Preco)
                 .HasPrecision(10, 2);
+            modelBuilder.Entity<Feedback>()
+                .HasOne(f => f.AppUser)
+                .WithMany()
+                .HasForeignKey(f => f.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Feedback>()
+                .HasOne(f => f.Barber)
+                .WithMany()
+                .HasForeignKey(f => f.BarberId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
 

@@ -20,9 +20,6 @@ namespace Infrastructure.Repositories
             _context = context;
            
         }
-
-      
-
         public async Task<List<FeedbackDto>> ShowFeedbackByBarberId(int barberId)
         {
             var feedbackDtos = await _context.Feedback
@@ -40,5 +37,14 @@ namespace Infrastructure.Repositories
             return feedbackDtos;
 
         }
+        public async Task<Feedback> CreateFeedback(Feedback feedback)
+        {
+            _context.Feedback.Add(feedback);
+           await _context.SaveChangesAsync();
+
+            return feedback;
+        }
+
     }
+
 }

@@ -105,31 +105,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("Domain.Entities.DTOs.BarberDto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProfilePictureUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BarberDto");
-                });
-
             modelBuilder.Entity("Domain.Entities.EmailVerification", b =>
                 {
                     b.Property<int>("Id")
@@ -354,21 +329,21 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Feedback", b =>
                 {
-                    b.HasOne("Domain.Entities.AppUser", "Client")
+                    b.HasOne("Domain.Entities.AppUser", "AppUser")
                         .WithMany()
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.DTOs.BarberDto", "Barber")
+                    b.HasOne("Domain.Entities.AppUser", "Barber")
                         .WithMany()
                         .HasForeignKey("BarberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Barber");
+                    b.Navigation("AppUser");
 
-                    b.Navigation("Client");
+                    b.Navigation("Barber");
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment", b =>
