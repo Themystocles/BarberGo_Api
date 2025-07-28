@@ -10,8 +10,6 @@ namespace Domain.Entities
         public int BarberId { get; set; }
         public DateTime DateTime { get; set; }
         public string Status { get; set; }
-
-      
         public AppUser? Client { get; set; }
         public Haircut? Haircut { get; set; }
         public AppUser? Barber { get; set; }

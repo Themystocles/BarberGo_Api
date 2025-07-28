@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Api.DTOs;
 using Domain.Entities;
-
+using Domain.Entities.DTOs;
 
 public class AutoMapperProfile : Profile
 {
@@ -20,5 +20,8 @@ public class AutoMapperProfile : Profile
     .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
         CreateMap<Haircut, Haircut>();
+        CreateMap<FeedbackDto, Feedback>();
+        CreateMap<Feedback, FeedbackDto>();
+
     }
 }
