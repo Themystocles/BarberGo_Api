@@ -24,14 +24,17 @@ namespace Infrastructure.Repositories
         {
             var feedbackDtos = await _context.Feedback
         .Where(f => f.BarberId == barberId)
+        .Include(a => a.AppUser)
+        .Include(b => b.Barber)
         .Select(f => new FeedbackDto
         {
             Id = f.Id,
-            AppUserId = f.AppUserId,
-            BarberId = f.BarberId,
+            AppUserName = f.AppUser.Name,
+            BarberName = f.Barber.Name,
             Rating = f.Rating,
             Comment = f.Comment
         })
+       
         .ToListAsync();
 
             return feedbackDtos;
