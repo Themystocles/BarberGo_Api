@@ -9,8 +9,8 @@ namespace Domain.Entities.DTOs
     public class FeedbackDto
     {
         public int Id { get; set; }
-        public int AppUserId { get; set; }
-        public int BarberId { get; set; }
+        public string AppUserName { get; set; }
+        public string BarberName { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }
     }
