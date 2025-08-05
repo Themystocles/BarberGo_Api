@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Persistence.Data;
 using Domain.Entities;
-using Domain.Entities.DTOs;
-using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 using Application.DTOs;
@@ -138,9 +136,6 @@ namespace Persistence.Repositories
             return Weekly;
         }
 
-        Task<List<BarberDto>> IWeeklySchedule.GetUserForType()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
