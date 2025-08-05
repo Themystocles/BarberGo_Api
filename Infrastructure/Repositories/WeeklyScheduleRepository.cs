@@ -3,8 +3,9 @@ using Persistence.Data;
 using Domain.Entities;
 using Domain.Entities.DTOs;
 using Domain.Interfaces;
-//using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
+using Application.DTOs;
 
 namespace Persistence.Repositories
 {
@@ -135,6 +136,11 @@ namespace Persistence.Repositories
                 .ToListAsync();
 
             return Weekly;
+        }
+
+        Task<List<BarberDto>> IWeeklySchedule.GetUserForType()
+        {
+            throw new NotImplementedException();
         }
     }
 }
