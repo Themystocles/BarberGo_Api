@@ -2,7 +2,7 @@
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity;
-using Domain.Entities.DTOs;
+using Application.DTOs;
 using System.Security;
 
 namespace Application.Services

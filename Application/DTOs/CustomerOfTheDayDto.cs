@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities.DTOs
+﻿namespace Application.DTOs
 {
     
    public class CustomerOfTheDayDto

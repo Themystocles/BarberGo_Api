@@ -1,14 +1,13 @@
-﻿using Domain.Entities;
-using Domain.Entities.DTOs;
-using Domain.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
 
 namespace Application.Services
 {
     public class AppointmentServices
     {
-        private readonly IAppointmentRepository _repository;
+        private readonly IAppointmentQueryService _repository;
 
-        public AppointmentServices(IAppointmentRepository repository)
+        public AppointmentServices(IAppointmentQueryService repository)
         {
             _repository = repository;
         }

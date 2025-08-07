@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Api.DTOs;
 using Domain.Entities;
-using Domain.Entities.DTOs;
+using Application.DTOs;
 
 public class AutoMapperProfile : Profile
 {

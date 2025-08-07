@@ -1,4 +1,4 @@
-﻿using Domain.Entities.DTOs;
+﻿using Application.DTOs;
 using Domain.Interfaces.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
