@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using Domain.Entities.DTOs;
+using Application.DTOs;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
@@ -44,6 +44,20 @@ namespace Infrastructure.Repositories
         {
             _context.Feedback.Add(feedback);
            await _context.SaveChangesAsync();
+
+            return feedback;
+        }
+        public async Task<Feedback> GetFeedbackByIdAsync(int id)
+        {
+            var feedback = await _context.Feedback.FindAsync(id);
+
+            return feedback;
+
+        }
+        public async Task<Feedback> UpdateFeedbackAsync(Feedback feedback)
+        {
+            _context.Feedback.Update(feedback);
+            await _context.SaveChangesAsync();
 
             return feedback;
         }

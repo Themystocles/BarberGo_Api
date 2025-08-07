@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entities.DTOs
+namespace Application.DTOs
 {
     public class RegisterUserDto
     {

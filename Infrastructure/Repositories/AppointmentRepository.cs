@@ -1,14 +1,14 @@
 ﻿using Persistence.Data;
 using Domain.Entities;
-using Domain.Entities.DTOs;
-using Domain.Interfaces;
+using Application.DTOs;
+using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Runtime.Serialization.DataContracts;
 
 namespace Persistence.Repositories
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentRepository : IAppointmentQueryService
     {
         private readonly DataContext _dataContext;
 

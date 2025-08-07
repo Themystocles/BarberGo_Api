@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Interfaces;
+using Domain.Entities;
 using Domain.Interfaces;
 
 namespace Application.Services
@@ -6,9 +7,9 @@ namespace Application.Services
     public class EmailServices
     {
         private readonly IEmailSender _emailSender;
-        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly IAppointmentQueryService _appointmentRepository;
 
-        public EmailServices(IEmailSender emailSender, IAppointmentRepository appointmentRepository)
+        public EmailServices(IEmailSender emailSender, IAppointmentQueryService appointmentRepository)
         {
             _emailSender = emailSender;
             _appointmentRepository = appointmentRepository;

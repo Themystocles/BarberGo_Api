@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Api.DTOs;
 using Domain.Entities;
-using Domain.Entities.DTOs;
-using Domain.Interfaces;
+using Application.DTOs;
+using Application.Interfaces;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +12,11 @@ using Microsoft.AspNetCore.Mvc;
 public class AppointmentController : ControllerBase
 {
     private readonly GenericRepositoryServices<Appointment> _service;
-    private readonly IAppointmentRepository _repository;
+    private readonly IAppointmentQueryService _repository;
     private readonly IMapper _mapper;
     private readonly EmailServices _emailServices;
 
-    public AppointmentController(GenericRepositoryServices<Appointment> service, IMapper mapper, IAppointmentRepository repository, EmailServices EmailService)
+    public AppointmentController(GenericRepositoryServices<Appointment> service, IMapper mapper, IAppointmentQueryService repository, EmailServices EmailService)
     {
         _service = service;
         _mapper = mapper;

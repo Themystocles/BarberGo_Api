@@ -50,7 +50,7 @@ namespace Api
             builder.Services.AddScoped<LoginUserRepository>();
             builder.Services.AddScoped<IWeeklySchedule, WeeklyScheduleRepository>();
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
-            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            builder.Services.AddScoped<IAppointmentQueryService, AppointmentRepository>();
             builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             builder.Services.AddScoped<UserAccountServices>();
             builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();

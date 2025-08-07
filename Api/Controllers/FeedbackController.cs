@@ -1,10 +1,8 @@
 ﻿using Application.Services;
-using AutoMapper;
 using Domain.Entities;
-using Domain.Entities.DTOs;
+using Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -35,6 +33,15 @@ namespace Api.Controllers
             var createdFeedback = await _feedbackServices.Createfeedback(dto);
 
             return Created("", createdFeedback);
+        }
+
+        [AllowAnonymous]
+        [HttpPut("update-feedback/{id}")]
+        public virtual async Task<ActionResult<Feedback>> UpdateEntity(int id, FeedbackDto dto)
+        {
+            var UpdateEntity = await _feedbackServices.UpdateFeedback(id, dto);
+
+            return Ok(UpdateEntity);
         }
 
 

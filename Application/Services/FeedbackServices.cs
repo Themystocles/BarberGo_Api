@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entities;
-using Domain.Entities.DTOs;
+using Application.DTOs;
 using Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -49,6 +46,35 @@ namespace Application.Services
 
 
             return feedbackCriado;
+
+        }
+        public async Task<Feedback> UpdateFeedback(int id, FeedbackDto dto)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("O Id não pode ser nulo aqui.");
+            }
+            if (id <= 0)
+            {
+                throw new ArgumentException("O id é inválido", nameof(id));
+            }
+
+            var feedback = await  _feedback.GetFeedbackByIdAsync(id);
+
+            if(feedback == null)
+            {
+                throw new NullReferenceException("O feedback par ao id passado não foi encontrado ou não existe");
+            }
+
+            _mapper.Map(dto, feedback);
+
+            await _feedback.UpdateFeedbackAsync(feedback);
+
+            return feedback;
+
+
+
+
 
         }
     }
