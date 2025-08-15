@@ -62,6 +62,11 @@ namespace Infrastructure.Repositories
             return feedback;
         }
 
+        public async Task<bool> HasCommentAsync(int userId, int barberId)
+        {
+            return await _context.Feedback
+            .AnyAsync(f => f.AppUserId == userId && f.BarberId == barberId);
+        }
     }
 
 }

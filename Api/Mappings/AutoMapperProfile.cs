@@ -22,6 +22,7 @@ public class AutoMapperProfile : Profile
         CreateMap<Haircut, Haircut>();
         CreateMap<FeedbackDto, Feedback>();
         CreateMap<Feedback, FeedbackDto>();
+        CreateMap<CreateFeedbackDto, Feedback>();
 
     }
 }

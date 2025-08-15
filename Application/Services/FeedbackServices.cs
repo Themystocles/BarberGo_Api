@@ -33,13 +33,17 @@ namespace Application.Services
             return feedbacks;
         }
 
-        public async Task<Feedback> Createfeedback(FeedbackDto dto)
+        public async Task<Feedback> Createfeedback(CreateFeedbackDto dto)
         {
             if (dto == null)
             {
                 throw new ArgumentNullException("A Entidade Feedback não pode ser nula aqui.");
             }
-            
+            bool jaComentou = await _feedback.HasCommentAsync(dto.AppUserId, dto.BarberId);
+
+            if (jaComentou)
+                throw new InvalidOperationException("O usuário já comentou para este barbeiro.");
+
             var feedback = _mapper.Map<Feedback>(dto);
 
             var feedbackCriado = await _feedback.CreateFeedback(feedback);

@@ -11,6 +11,7 @@ namespace Domain.Interfaces
     public interface IFeedback
     {
         Task<List<FeedbackDto>> ShowFeedbackByBarberId(int barberId);
+        Task<bool> HasCommentAsync(int userId, int barberId);
 
         Task<Feedback> CreateFeedback(Feedback feedback);
 

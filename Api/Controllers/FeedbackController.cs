@@ -28,7 +28,7 @@ namespace Api.Controllers
         }
         [AllowAnonymous]
         [HttpPost("create-feedback")]
-        public virtual async Task<ActionResult<Feedback>> CreateEntity(FeedbackDto dto)
+        public virtual async Task<ActionResult<Feedback>> CreateEntity(CreateFeedbackDto dto)
         {
             var createdFeedback = await _feedbackServices.Createfeedback(dto);
 
