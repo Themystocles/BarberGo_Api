@@ -42,7 +42,7 @@ namespace Application.Services
             bool jaComentou = await _feedback.HasCommentAsync(dto.AppUserId, dto.BarberId);
 
             if (jaComentou)
-                throw new InvalidOperationException("O usuário já comentou para este barbeiro.");
+                throw new InvalidOperationException("O usuário já comentou para este barbeiro. Edite seu comentário se precisar");
 
             var feedback = _mapper.Map<Feedback>(dto);
 
