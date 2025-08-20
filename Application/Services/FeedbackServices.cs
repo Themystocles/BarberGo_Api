@@ -52,6 +52,16 @@ namespace Application.Services
             return feedbackCriado;
 
         }
+        public async Task<Feedback> GetFeedback(int id)
+        {
+            if (_feedback == null)
+                throw new NullReferenceException("O feedback par ao id passado não foi encontrado ou não existe");
+
+           var feedback = await _feedback.GetFeedbackByIdAsync(id);
+
+            return feedback;
+
+        }
         public async Task<Feedback> UpdateFeedback(int id, FeedbackDto dto)
         {
             if (id == null)

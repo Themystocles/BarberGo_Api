@@ -34,6 +34,17 @@ namespace Api.Controllers
 
             return Created("", createdFeedback);
         }
+        [AllowAnonymous]
+        [HttpGet("Feedback/{id}")]
+        public async Task <IActionResult> GetFeedbackById(int id)
+        {
+            var feedback = await _feedbackServices.GetFeedback(id);
+
+            return Ok(feedback);
+
+        }
+
+
 
         [AllowAnonymous]
         [HttpPut("update-feedback/{id}")]
