@@ -16,7 +16,7 @@ namespace Api.Controllers
         [HttpGet("teste")]
         public async Task<IActionResult> EnviarEmailTeste()
         {
-            string destino = "themystocles@outlook.com"; 
+            string destino = "themystocles21@gmail.com"; 
             string assunto = "Não responda este email";
             string corpo = "<p>voce tem um agendamento marcado <strong>hoje</strong>as 9 horas.</p>";
 

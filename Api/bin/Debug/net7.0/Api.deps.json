@@ -790,6 +790,9 @@
         }
       },
       "Domain/1.0.0": {
+        "dependencies": {
+          "SendGrid": "9.29.3"
+        },
         "runtime": {
           "Domain.dll": {}
         }

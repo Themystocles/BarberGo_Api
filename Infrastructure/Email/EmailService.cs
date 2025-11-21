@@ -1,36 +1,30 @@
-﻿using System.Net;
-using System.Net.Mail;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.Extensions.Options;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System.Threading.Tasks;
 
-public class SmtpEmailSender : IEmailSender
+public class SendGridEmailSender : IEmailSender
 {
     private readonly EmailSettings _settings;
+    private readonly SendGridClient _client;
 
-    public SmtpEmailSender(IOptions<EmailSettings> settings)
+    public SendGridEmailSender(IOptions<EmailSettings> settings)
     {
         _settings = settings.Value;
+        _client = new SendGridClient(_settings.ApiKey);
     }
 
     public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
     {
-        using var client = new SmtpClient(_settings.SmtpServer, _settings.Port)
-        {
-            Credentials = new NetworkCredential(_settings.Username, _settings.Password),
-            EnableSsl = true
-        };
+        var from = new EmailAddress(_settings.FromEmail, _settings.FromName);
+        var to = new EmailAddress(toEmail);
 
-        var mailMessage = new MailMessage
-        {
-            From = new MailAddress(_settings.SenderEmail, _settings.SenderName),
-            Subject = subject,
-            Body = htmlBody,
-            IsBodyHtml = true
-        };
+        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent: null, htmlContent: htmlBody);
 
-        mailMessage.To.Add(toEmail);
+        var response = await _client.SendEmailAsync(msg);
 
-        await client.SendMailAsync(mailMessage);
-    }
-}
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"Erro ao enviar email. Status: {response.StatusCode}");
+    }}

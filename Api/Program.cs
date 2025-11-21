@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Application.Interfaces;
 using Infrastructure.Repositories;
 
+
 namespace Api
 {
     public class Program
@@ -53,7 +54,16 @@ namespace Api
             builder.Services.AddScoped<IAppointmentQueryService, AppointmentRepository>();
             builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             builder.Services.AddScoped<UserAccountServices>();
-            builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+            // builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+            var emailSettingsSection = builder.Configuration.GetSection("EmailSettings");
+            var sendGridApiKey = emailSettingsSection["ApiKey"];
+            var fromEmail = emailSettingsSection["FromEmail"];
+            var fromName = emailSettingsSection["FromName"];
+
+            builder.Services.AddScoped<IEmailSender>(_ =>
+              new SendGridEmailSender(sendGridApiKey, fromEmail, fromName));
+
+
             builder.Services.AddScoped<EmailServices>();
             builder.Services.AddScoped<IRecoveryPassword, RecoveryPasswordRepository>();
             builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();

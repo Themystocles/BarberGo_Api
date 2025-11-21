@@ -67,6 +67,8 @@ namespace Infrastructure.Repositories
             return await _context.Feedback
             .AnyAsync(f => f.AppUserId == userId && f.BarberId == barberId);
         }
+
+        
     }
 
 }
