@@ -1,23 +1,20 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Persistence.Data;
-using Domain.Interfaces;
-using Persistence.Repositories;
-using Application.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Authentication;
-using Domain.Entities;
-using Domain.Interfaces.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Domain.Entities;
+using Domain.Interfaces;
 using Application.Interfaces;
+using Application.Services;
+using Persistence.Data;
+using Persistence.Repositories;
 using Infrastructure.Repositories;
-
+using Domain.Interfaces.Domain.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Api
 {
@@ -35,50 +32,38 @@ namespace Api
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
 
-            builder.Services.Configure<EmailSettings>(
-            builder.Configuration.GetSection("EmailSettings"));
-
             // Configuração do DbContext
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Configuração dos serviços
+            // AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
+
+            // Repositórios e serviços
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(GenericRepositoryServices<>));
+            builder.Services.AddScoped<IAppointmentQueryService, AppointmentRepository>();
             builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<LoginServices>();
-            builder.Services.AddScoped<LoginUserRepository>();
             builder.Services.AddScoped<IWeeklySchedule, WeeklyScheduleRepository>();
             builder.Services.AddScoped<ITodaysCustomers, TodaysCustomers>();
-            builder.Services.AddScoped<IAppointmentQueryService, AppointmentRepository>();
             builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             builder.Services.AddScoped<UserAccountServices>();
-            // builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
-            var emailSettingsSection = builder.Configuration.GetSection("EmailSettings");
-            var sendGridApiKey = emailSettingsSection["ApiKey"];
-            var fromEmail = emailSettingsSection["FromEmail"];
-            var fromName = emailSettingsSection["FromName"];
-
-            builder.Services.AddScoped<IEmailSender, SendGridEmailSender>();
-
-
-            builder.Services.AddScoped<EmailServices>();
             builder.Services.AddScoped<IRecoveryPassword, RecoveryPasswordRepository>();
             builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
             builder.Services.AddScoped<EmailConfirmationServices>();
             builder.Services.AddScoped<ILoginUserRepository, LoginUserRepository>();
             builder.Services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<IFeedback, FeedbackRepository>();
             builder.Services.AddScoped<FeedbackServices>();
 
+            // Configuração do Email
+            builder.Services.Configure<EmailSettings>(
+                builder.Configuration.GetSection("EmailSettings"));
 
-
-
-
-
+            builder.Services.AddScoped<IEmailSender, SendGridEmailSender>();
+            builder.Services.AddScoped<EmailServices>();
 
             // Configuração do Swagger com JWT
             builder.Services.AddSwaggerGen(c =>
@@ -114,16 +99,9 @@ namespace Api
 
             builder.Services.AddAuthentication(options =>
             {
-               // options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-               // options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-              //  options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
-
-
             })
             .AddJwtBearer(options =>
             {
@@ -145,7 +123,7 @@ namespace Api
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
                 googleOptions.CallbackPath = "/signin-google";
-                
+
                 googleOptions.Scope.Clear();
                 googleOptions.Scope.Add("openid");
                 googleOptions.Scope.Add("profile");
@@ -153,6 +131,7 @@ namespace Api
 
                 googleOptions.ClaimActions.MapJsonKey("picture", "picture", "url");
             });
+
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy =>
@@ -166,7 +145,7 @@ namespace Api
                 options.AddPolicy(MyAllowSpecificOrigins,
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173", "https://barbergo-ui.onrender.com") // Permite requisições do React
+                        policy.WithOrigins("http://localhost:5173", "https://barbergo-ui.onrender.com")
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
@@ -178,18 +157,13 @@ namespace Api
 
             var app = builder.Build();
 
-            // Configurar o pipeline HTTP
-           
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            
+            // Pipeline HTTP
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
-
-            app.UseHttpsRedirection();
-
             app.UseCors(MyAllowSpecificOrigins);
             app.UseForwardedHeaders();
 
