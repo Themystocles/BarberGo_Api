@@ -60,8 +60,7 @@ namespace Api
             var fromEmail = emailSettingsSection["FromEmail"];
             var fromName = emailSettingsSection["FromName"];
 
-            builder.Services.AddScoped<IEmailSender>(_ =>
-              new SendGridEmailSender(sendGridApiKey, fromEmail, fromName));
+            builder.Services.AddScoped<IEmailSender, SendGridEmailSender>();
 
 
             builder.Services.AddScoped<EmailServices>();
