@@ -1,2 +1,20 @@
-BarberGo/appsettings.json
-BarberGo/wwwroot/uploads/
+# Ignore appsettings (todas as variações)
+appsettings.json
+appsettings.*.json
+
+# Ignore pastas de build
+bin/
+obj/
+
+# Ignore arquivos de usuário do VS
+*.user
+*.suo
+
+# Ignore logs
+*.log
+
+# Ignore publish
+publish/
+
+# Ignore uploads da aplicação
+wwwroot/uploads/
