@@ -62,7 +62,9 @@ namespace Api
             builder.Services.Configure<EmailSettings>(
                 builder.Configuration.GetSection("EmailSettings"));
 
-            builder.Services.AddScoped<IEmailSender, SendGridEmailSender>();
+            
+            builder.Services.AddHttpClient<IEmailSender, ResendEmailSender>();
+
             builder.Services.AddScoped<EmailServices>();
 
             // Configuração do Swagger com JWT

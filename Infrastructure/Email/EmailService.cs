@@ -1,30 +1,54 @@
-﻿using Domain.Entities;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
+using Domain.Entities;
 using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
-public class SendGridEmailSender : IEmailSender
+public class ResendEmailSender : IEmailSender
 {
     private readonly EmailSettings _settings;
-    private readonly SendGridClient _client;
+    private readonly HttpClient _httpClient;
 
-    public SendGridEmailSender(IOptions<EmailSettings> settings)
+    public ResendEmailSender(
+        IOptions<EmailSettings> settings,
+        HttpClient httpClient)
     {
         _settings = settings.Value;
-        _client = new SendGridClient(_settings.ApiKey);
+        _httpClient = httpClient;
+
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", _settings.ApiKey);
     }
 
-    public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
+    public async Task SendEmailAsync(
+        string toEmail,
+        string subject,
+        string htmlBody)
     {
-        var from = new EmailAddress(_settings.FromEmail, _settings.FromName);
-        var to = new EmailAddress(toEmail);
+        var body = new
+        {
+            from = $"{_settings.FromName} <{_settings.FromEmail}>",
+            to = toEmail,
+            subject = subject,
+            html = htmlBody
+        };
 
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent: null, htmlContent: htmlBody);
+        var json = JsonSerializer.Serialize(body);
 
-        var response = await _client.SendEmailAsync(msg);
+        var content = new StringContent(
+            json,
+            Encoding.UTF8,
+            "application/json");
+
+        var response = await _httpClient.PostAsync(
+            "https://api.resend.com/emails",
+            content);
 
         if (!response.IsSuccessStatusCode)
-            throw new Exception($"Erro ao enviar email. Status: {response.StatusCode}");
-    }}
+        {
+            var erro = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Erro ao enviar email: {erro}");
+        }
+    }
+}
