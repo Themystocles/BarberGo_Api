@@ -62,7 +62,7 @@ namespace Api
             builder.Services.Configure<EmailSettings>(
                 builder.Configuration.GetSection("EmailSettings"));
 
-            
+
             builder.Services.AddHttpClient<IEmailSender, ResendEmailSender>();
 
             builder.Services.AddScoped<EmailServices>();
@@ -147,7 +147,8 @@ namespace Api
                 options.AddPolicy(MyAllowSpecificOrigins,
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173", "https://barbergo-ui.onrender.com")
+                        //policy.WithOrigins("http://localhost:5173", "https://barbergo-ui.onrender.com")
+                        policy.AllowAnyOrigin()
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
