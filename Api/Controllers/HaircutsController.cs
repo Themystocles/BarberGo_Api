@@ -8,13 +8,14 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Tags("(Haircuts) Catálogo dos Cortes")]
     [Authorize(Roles = "Administrator")]
     public class HaircutsController : GenericRepositoryController<Haircut>
     {
         public HaircutsController(GenericRepositoryServices<Haircut> genericRepositoryServices)
                 : base(genericRepositoryServices)
         {
-           
+
         }
         [AllowAnonymous]
         [HttpGet]

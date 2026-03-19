@@ -3,6 +3,7 @@ using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
+[Tags("(Auth) Logar no sistema")]
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {

@@ -9,6 +9,7 @@ namespace Api.Controllers
 {
 
     [ApiController]
+    [Tags("(AppUser) Usuários do Sistema")]
     [Route("api/[controller]")]
     public class AppUserController : GenericRepositoryController<AppUser>
     {
@@ -175,7 +176,7 @@ namespace Api.Controllers
         [HttpGet("GetUserByEmail")]
         public async Task<ActionResult<AppUser>> getUserByEmail([FromQuery] string email)
         {
-          var user =  await _userAccountServices.GetUserbyEmail(email);
+            var user = await _userAccountServices.GetUserbyEmail(email);
             return Ok(user);
 
         }
@@ -196,7 +197,7 @@ namespace Api.Controllers
             if (user == null)
                 return NotFound("Usuário não encontrado.");
 
-           
+
             if (!string.IsNullOrEmpty(user.ProfilePictureUrl) && !user.ProfilePictureUrl.StartsWith("http"))
             {
                 user.ProfilePictureUrl = $"{Request.Scheme}://{Request.Host}/uploads/{user.ProfilePictureUrl}";
@@ -227,5 +228,5 @@ namespace Api.Controllers
         }
 
     }
-  
+
 }

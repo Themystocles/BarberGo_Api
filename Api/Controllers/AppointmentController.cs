@@ -7,8 +7,10 @@ using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+
 [ApiController]
 [Route("api/[controller]")]
+[Tags("(Appointment) Agendamentos - Clientes")]
 public class AppointmentController : ControllerBase
 {
     private readonly GenericRepositoryServices<Appointment> _service;
@@ -25,9 +27,10 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpPost("create")]
+
     public async Task<IActionResult> Create(AppointmentDto dto)
     {
-        var entity = _mapper.Map<Appointment>(dto);     
+        var entity = _mapper.Map<Appointment>(dto);
 
         var result = await _service.CreateAsync(entity);
 
@@ -43,7 +46,7 @@ public class AppointmentController : ControllerBase
         var entities = await _service.GetList();
         return Ok(entities);
     }
-  
+
 
 
     [HttpGet("find/{id}")]
@@ -53,14 +56,14 @@ public class AppointmentController : ControllerBase
         return Ok(entity);
     }
     [HttpGet("appointments/{iduser}")]
-    public async Task <ActionResult<IEnumerable<MyAppointmentDto>>> GetAppointmenteByIdUser(int iduser)
+    public async Task<ActionResult<IEnumerable<MyAppointmentDto>>> GetAppointmenteByIdUser(int iduser)
     {
         var Appointment = await _repository.GetAppointmentsByUserId(iduser);
 
         return Ok(Appointment);
     }
     [HttpGet("Historyappointments/{iduser}")]
-    public async Task<ActionResult<IEnumerable<MyAppointmentDto>>> GetHistorybyDateAndId(int iduser,[FromQuery] DateTime? date)
+    public async Task<ActionResult<IEnumerable<MyAppointmentDto>>> GetHistorybyDateAndId(int iduser, [FromQuery] DateTime? date)
     {
         var Appointment = await _repository.GetHistoryAppointment(iduser, date);
 

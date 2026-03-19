@@ -8,6 +8,7 @@ using Application.Interfaces;
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
+    [Tags("(WeeklySchedule)Agenda Semanal do barbeiro.  ")]
     [ApiController]
     public class WeeklyScheduleController : GenericRepositoryController<WeeklySchedule>
     {
@@ -21,7 +22,7 @@ namespace Api.Controllers
         [HttpGet("weeklySchedule/{barberId}")]
         public async Task<ActionResult<List<WeeklySchedule>>> GetAllEntities(int barberId)
         {
-            
+
 
             var week = await _weeklySchedule.GetWeeklyScheduleByBarberId(barberId);
             return Ok(week);
@@ -36,9 +37,9 @@ namespace Api.Controllers
         [HttpPost("create-weekly")]
         public override async Task<ActionResult<WeeklySchedule>> CreateEntity(WeeklySchedule schedule)
         {
-           await _weeklySchedule.CreateNewSchedule(schedule);
+            await _weeklySchedule.CreateNewSchedule(schedule);
 
-           return Ok(schedule);
+            return Ok(schedule);
         }
         [HttpPut("updateOv/{id}")]
         public override async Task<ActionResult<WeeklySchedule>> UpdateEntity(int id, WeeklySchedule schedule)
@@ -49,13 +50,13 @@ namespace Api.Controllers
             return Ok(schedule);
         }
         [HttpGet("barbers")]
-        public async Task <ActionResult<List<BarberDto>>> GetUserForType()
+        public async Task<ActionResult<List<BarberDto>>> GetUserForType()
         {
 
             var barbers = await _weeklySchedule.GetUserForType();
 
-            return Ok(barbers); 
- 
+            return Ok(barbers);
+
 
         }
     }

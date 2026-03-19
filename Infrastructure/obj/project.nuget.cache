@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "REQSeV7idKoEvEo8DPFiIQjq4PSxBJLGm91gJI3/H+3vDg6KqgwnnVybw2f+bzSrY2Ew5n9fWejqQHZNzEl4hQ==",
+  "dgSpecHash": "Fr/OGHQv1lANMCJ2ZW60Sv3GLCT9B3GRRmcs6c8Xyyxx7J5tebBeTpcoXbcY98/PRt2waJNY+ZBcXWjNl28jHA==",
   "success": true,
   "projectFilePath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\BarberGo\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -63,7 +63,10 @@
     "C:\\Users\\themy\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
     "C:\\Users\\themy\\.nuget\\packages\\system.text.encoding\\4.3.0\\system.text.encoding.4.3.0.nupkg.sha512",
     "C:\\Users\\themy\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
-    "C:\\Users\\themy\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512"
+    "C:\\Users\\themy\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512",
+    "C:\\Users\\themy\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.14\\microsoft.netcore.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\themy\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.14\\microsoft.windowsdesktop.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\themy\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.14\\microsoft.aspnetcore.app.ref.7.0.14.nupkg.sha512"
   ],
   "logs": []
 }

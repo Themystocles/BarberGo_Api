@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
+    [Tags("(Feedback) Feedback dos clientes")]
     [Route("api/[controller]")]
     public class FeedbackController : GenericRepositoryController<Feedback>
     {
@@ -19,7 +20,7 @@ namespace Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("get/{barberId}")]  
+        [HttpGet("get/{barberId}")]
         public async Task<IActionResult> GetFeedbacksByBarberIdAsync(int barberId)
         {
             var feedbacks = await _feedbackServices.ShowFeedbackByBarberId(barberId);
@@ -36,7 +37,7 @@ namespace Api.Controllers
         }
         [AllowAnonymous]
         [HttpGet("Feedback/{id}")]
-        public async Task <IActionResult> GetFeedbackById(int id)
+        public async Task<IActionResult> GetFeedbackById(int id)
         {
             var feedback = await _feedbackServices.GetFeedback(id);
 

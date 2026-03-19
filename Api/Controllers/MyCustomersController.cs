@@ -9,6 +9,7 @@ using System.Data;
 namespace Api.Controllers
 {
     [ApiController]
+    [Tags("(MyCustomers) Tela de Clientes Agendados do barbeiro.  ")]
     [Route("api/[controller]")]
     public class MyCustomersController : ControllerBase
     {
@@ -22,7 +23,7 @@ namespace Api.Controllers
         [HttpGet("ClientesDoDia/{barberid}")]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetCustomersOfTheDay(int barberid, [FromQuery] DateTime date)
         {
-            
+
 
             var entities = await _todaysCustomers.MyCustomersOfTheDay(date, barberid);
             return Ok(entities);

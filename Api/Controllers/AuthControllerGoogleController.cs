@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Application.Interfaces;
 
 [ApiController]
+[Tags("(AuthGoogle) Logar com Google")]
 [Route("auth")]
 public class AuthGoogleController : ControllerBase
 {
