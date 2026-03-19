@@ -1,4 +1,4 @@
-﻿using   Persistence.Data;
+﻿using Persistence.Data;
 using Domain.Entities;
 using Application.DTOs;
 using Domain.Interfaces;
@@ -16,7 +16,7 @@ namespace Persistence.Repositories
         }
         public async Task<List<CustomerOfTheDayDto>> MyCustomersOfTheDay(DateTime date, int barberid)
         {
-            var startDate = date.Date.ToUniversalTime();
+            var startDate = date.Date;
             var endDate = startDate.AddDays(1);
 
             return await _context.Appointments
