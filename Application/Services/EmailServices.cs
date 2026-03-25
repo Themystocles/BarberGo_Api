@@ -61,19 +61,19 @@ namespace Application.Services
         public async Task SendAppointmentCancellationNotificationToBarberAsync(Appointment appointment)
         {
             var appoint = await _appointmentRepository.GetAppointmentWithDetailsAsync(appointment.Id);
-            if (appoint == null)
-                throw new InvalidOperationException("Agendamento não encontrado.");
+
+            if (appoint == null || appoint.Barber == null || appoint.Client == null)
+                throw new InvalidOperationException("Agendamento, barbeiro ou cliente não encontrado.");
 
             string destine = appoint.Barber.Email;
             string subject = "Agendamento Cancelado";
             string body = $@"
-                <p>Olá <strong>{appoint.Barber.Name}</strong>,</p>
-                <p>O cliente <strong>{appoint.Client.Name}</strong> cancelou o agendamento que estava marcado para <strong>{appoint.DateTime:dd/MM/yyyy HH:mm}</strong>.</p>
-                <p>O horário agora está disponível para outros clientes.</p>";
+        <p>Olá <strong>{appoint.Barber.Name}</strong>,</p>
+        <p>O cliente <strong>{appoint.Client.Name}</strong> cancelou o agendamento que estava marcado para <strong>{appoint.DateTime:dd/MM/yyyy HH:mm}</strong>.</p>
+        <p>O horário agora está disponível para outros clientes.</p>";
 
             await _emailSender.SendEmailAsync(destine, subject, body);
         }
-
         public async Task SendCodeRecoveryPassword()
         {
             // ainda vazio

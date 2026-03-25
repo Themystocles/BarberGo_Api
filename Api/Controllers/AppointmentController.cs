@@ -91,18 +91,27 @@ public class AppointmentController : ControllerBase
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        // Busca o agendamento antes de deletar para poder enviar o e-mail
+        // Busca o agendamento antes de deletar
         var appointment = await _service.GetByIdAsync(id);
+
         if (appointment == null)
             return NotFound();
 
-        // Deleta o agendamento
         var deleted = await _service.DeleteAsync(id);
 
         if (deleted)
         {
-            // Envia e-mail de cancelamento para o barbeiro
-            await _emailServices.SendAppointmentCancellationNotificationToBarberAsync(appointment);
+            try
+            {
+                // Tenta enviar e-mail de cancelamento
+                await _emailServices.SendAppointmentCancellationNotificationToBarberAsync(appointment);
+            }
+            catch (Exception ex)
+            {
+                // Log do erro, mas não impede o cancelamento
+                Console.WriteLine($"Erro ao enviar e-mail de cancelamento: {ex.Message}");
+            }
+
             return NoContent();
         }
 
