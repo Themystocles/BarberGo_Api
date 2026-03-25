@@ -15,6 +15,7 @@ namespace Application.Services
             _appointmentRepository = appointmentRepository;
         }
 
+        // Método existente para enviar e-mail de agendamento
         public async Task SendAppointmentNotificationToBarberAsync(Appointment appointment)
         {
             var appoint = await _appointmentRepository.GetAppointmentWithDetailsAsync(appointment.Id);
@@ -54,6 +55,23 @@ namespace Application.Services
                 <p>Nos vemos em breve!</p>";
 
             await _emailSender.SendEmailAsync(clientEmail, subjectToClient, bodyToClient);
+        }
+
+        // Novo método para enviar e-mail de cancelamento ao barbeiro
+        public async Task SendAppointmentCancellationNotificationToBarberAsync(Appointment appointment)
+        {
+            var appoint = await _appointmentRepository.GetAppointmentWithDetailsAsync(appointment.Id);
+            if (appoint == null)
+                throw new InvalidOperationException("Agendamento não encontrado.");
+
+            string destine = appoint.Barber.Email;
+            string subject = "Agendamento Cancelado";
+            string body = $@"
+                <p>Olá <strong>{appoint.Barber.Name}</strong>,</p>
+                <p>O cliente <strong>{appoint.Client.Name}</strong> cancelou o agendamento que estava marcado para <strong>{appoint.DateTime:dd/MM/yyyy HH:mm}</strong>.</p>
+                <p>O horário agora está disponível para outros clientes.</p>";
+
+            await _emailSender.SendEmailAsync(destine, subject, body);
         }
 
         public async Task SendCodeRecoveryPassword()

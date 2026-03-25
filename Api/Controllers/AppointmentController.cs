@@ -91,7 +91,21 @@ public class AppointmentController : ControllerBase
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
+        // Busca o agendamento antes de deletar para poder enviar o e-mail
+        var appointment = await _service.GetByIdAsync(id);
+        if (appointment == null)
+            return NotFound();
+
+        // Deleta o agendamento
         var deleted = await _service.DeleteAsync(id);
-        return deleted ? NoContent() : NotFound();
+
+        if (deleted)
+        {
+            // Envia e-mail de cancelamento para o barbeiro
+            await _emailServices.SendAppointmentCancellationNotificationToBarberAsync(appointment);
+            return NoContent();
+        }
+
+        return NotFound();
     }
 }
