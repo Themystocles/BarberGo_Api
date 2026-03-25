@@ -15,9 +15,12 @@ namespace Application.Services
             _appointmentRepository = appointmentRepository;
         }
 
-        // Método existente para enviar e-mail de agendamento
+        // ---------------------------
+        // MÉTODOS EXISTENTES DE AGENDAMENTO
+        // ---------------------------
         public async Task SendAppointmentNotificationToBarberAsync(Appointment appointment)
         {
+            // Mantido como estava, buscando novamente no banco
             var appoint = await _appointmentRepository.GetAppointmentWithDetailsAsync(appointment.Id);
             if (appoint == null)
                 throw new InvalidOperationException("Agendamento não encontrado.");
@@ -57,23 +60,28 @@ namespace Application.Services
             await _emailSender.SendEmailAsync(clientEmail, subjectToClient, bodyToClient);
         }
 
-        // Novo método para enviar e-mail de cancelamento ao barbeiro
-        public async Task SendAppointmentCancellationNotificationToBarberAsync(Appointment appointment)
+        // ---------------------------
+        // NOVO MÉTODO DE CANCELAMENTO
+        // ---------------------------
+        // Não busca novamente no banco, usa o Appointment que já foi carregado antes do delete
+        public async Task SendAppointmentCancellationNotificationToBarberAsync(Appointment appoint)
         {
-            var appoint = await _appointmentRepository.GetAppointmentWithDetailsAsync(appointment.Id);
-
             if (appoint == null || appoint.Barber == null || appoint.Client == null)
                 throw new InvalidOperationException("Agendamento, barbeiro ou cliente não encontrado.");
 
             string destine = appoint.Barber.Email;
             string subject = "Agendamento Cancelado";
             string body = $@"
-        <p>Olá <strong>{appoint.Barber.Name}</strong>,</p>
-        <p>O cliente <strong>{appoint.Client.Name}</strong> cancelou o agendamento que estava marcado para <strong>{appoint.DateTime:dd/MM/yyyy HH:mm}</strong>.</p>
-        <p>O horário agora está disponível para outros clientes.</p>";
+                <p>Olá <strong>{appoint.Barber.Name}</strong>,</p>
+                <p>O cliente <strong>{appoint.Client.Name}</strong> cancelou o agendamento que estava marcado para <strong>{appoint.DateTime:dd/MM/yyyy HH:mm}</strong>.</p>
+                <p>O horário agora está disponível para outros clientes.</p>";
 
             await _emailSender.SendEmailAsync(destine, subject, body);
         }
+
+        // ---------------------------
+        // MÉTODO FUTURO (RECUPERAÇÃO DE SENHA)
+        // ---------------------------
         public async Task SendCodeRecoveryPassword()
         {
             // ainda vazio
