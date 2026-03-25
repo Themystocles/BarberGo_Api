@@ -111,6 +111,9 @@ public class AppointmentController : ControllerBase
             {
                 // Log do erro, mas não impede o delete
                 Console.WriteLine($"Erro ao enviar e-mail de cancelamento: {ex.Message}");
+                Console.WriteLine($"Appointment: {appointment?.Id}");
+                Console.WriteLine($"Barber: {appointment?.Barber?.Name} / {appointment?.Barber?.Email}");
+                Console.WriteLine($"Client: {appointment?.Client?.Name} / {appointment?.Client?.Email}");
             }
 
             return NoContent();
