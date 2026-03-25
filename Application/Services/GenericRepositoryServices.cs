@@ -36,15 +36,15 @@ namespace Application.Services
             {
                 throw new ArgumentNullException(nameof(entity), "A entidade não pode ser nula.");
             }
-            
-            
+
+
             return await _genericRepository.CreateAsync(entity);
 
         }
         public async Task<T> UpdateAsync(T entity)
         {
             if (entity == null)
-            { 
+            {
                 throw new ArgumentNullException(nameof(entity), "A entidade não pode ser nula.");
             }
             if (entity.Id <= 0)
@@ -67,7 +67,7 @@ namespace Application.Services
         }
         public async Task<bool> DeleteAsync(int id)
         {
-            
+
             if (id <= 0)
             {
                 throw new ArgumentException($"O ID informado ({id}) é inválido. Certifique-se de fornecer um ID válido.");
