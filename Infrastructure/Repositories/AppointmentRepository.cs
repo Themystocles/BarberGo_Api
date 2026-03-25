@@ -19,8 +19,9 @@ namespace Persistence.Repositories
 
         public async Task<List<MyAppointmentDto>> GetAppointmentsByUserId(int idUser)
         {
+            var now = DateTime.Now;
             return await _dataContext.Appointments
-                 .Where(a => a.ClientId == idUser && a.DateTime >= DateTime.Today)
+                 .Where(a => a.ClientId == idUser && a.DateTime >= now)
                  .Include(a => a.Client)
                  .Include(a => a.Barber)
                  .Include(a => a.Haircut)
@@ -111,4 +112,4 @@ namespace Persistence.Repositories
                 .ToListAsync();
         }
     }
-    }
+}
