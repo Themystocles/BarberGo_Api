@@ -3,8 +3,6 @@ using Domain.Entities;
 using Application.DTOs;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Runtime.Serialization.DataContracts;
 
 namespace Persistence.Repositories
 {
@@ -17,30 +15,32 @@ namespace Persistence.Repositories
             _dataContext = context;
         }
 
+        // 🔥 FUTUROS (inclui hoje inteiro)
         public async Task<List<MyAppointmentDto>> GetAppointmentsByUserId(int idUser)
         {
-            var now = DateTime.Now;
+            // UTC do servidor
+            var utcNow = DateTime.UtcNow;
+
+            // Converte para horário local (Brasil)
+            var localNow = utcNow.AddHours(-3);
+
+            // Pega apenas a DATA (ignora hora)
+            var today = localNow.Date;
+
             return await _dataContext.Appointments
-                 .Where(a => a.ClientId == idUser && a.DateTime >= now)
-                 .Include(a => a.Client)
-                 .Include(a => a.Barber)
-                 .Include(a => a.Haircut)
-                  .Select(a => new MyAppointmentDto
-                  {
-                      id = a.Id,
-                      ClientName = a.Client.Name,
-                      ClientPhone = a.Client.Phone,
-                      HaircutName = a.Haircut.Name,
-                      HaircutPreco = a.Haircut.Preco,
-                      BarberName = a.Barber.Name,
-                      DateTime = a.DateTime,
-                      Status = a.Status
-                  })
-                 .ToListAsync();
-
-
-
-
+                .Where(a => a.ClientId == idUser && a.DateTime.Date >= today)
+                .Select(a => new MyAppointmentDto
+                {
+                    id = a.Id,
+                    ClientName = a.Client.Name,
+                    ClientPhone = a.Client.Phone,
+                    HaircutName = a.Haircut.Name,
+                    HaircutPreco = a.Haircut.Preco,
+                    BarberName = a.Barber.Name,
+                    DateTime = a.DateTime,
+                    Status = a.Status
+                })
+                .ToListAsync();
         }
 
         public async Task<Appointment?> GetAppointmentWithDetailsAsync(int appointmentId)
@@ -52,18 +52,19 @@ namespace Persistence.Repositories
                 .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
 
+        // 🔥 HISTÓRICO (antes de hoje)
         public async Task<List<MyAppointmentDto>> GetHistoryAppointment(int idUser, DateTime? date = null)
         {
+            var utcNow = DateTime.UtcNow;
+            var localNow = utcNow.AddHours(-3);
+            var today = localNow.Date;
+
             var query = _dataContext.Appointments
-                .Where(a => a.ClientId == idUser && a.DateTime < DateTime.Now)
-                .Include(a => a.Client)
-                .Include(a => a.Barber)
-                .Include(a => a.Haircut)
+                .Where(a => a.ClientId == idUser && a.DateTime.Date < today)
                 .AsQueryable();
 
             if (date.HasValue)
             {
-
                 query = query.Where(a => a.DateTime.Date == date.Value.Date);
             }
 
@@ -82,18 +83,19 @@ namespace Persistence.Repositories
                 .ToListAsync();
         }
 
+        // 🔥 HISTÓRICO DO BARBEIRO
         public async Task<List<MyAppointmentDto>> GetMyAppointmentsHistorybyBarberId(int barberId, DateTime? date)
         {
+            var utcNow = DateTime.UtcNow;
+            var localNow = utcNow.AddHours(-3);
+            var today = localNow.Date;
+
             var query = _dataContext.Appointments
-               .Where(a => a.BarberId == barberId && a.DateTime < DateTime.Now)
-               .Include(a => a.Client)
-               .Include(a => a.Barber)
-               .Include(a => a.Haircut)
-               .AsQueryable();
+                .Where(a => a.BarberId == barberId && a.DateTime.Date < today)
+                .AsQueryable();
 
             if (date.HasValue)
             {
-
                 query = query.Where(a => a.DateTime.Date == date.Value.Date);
             }
 
