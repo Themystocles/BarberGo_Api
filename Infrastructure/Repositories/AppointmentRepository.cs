@@ -37,6 +37,7 @@ namespace Persistence.Repositories
                     HaircutName = a.Haircut.Name,
                     HaircutPreco = a.Haircut.Preco,
                     BarberName = a.Barber.Name,
+                    BarberPhone = a.Barber.Phone,
                     DateTime = a.DateTime,
                     Status = a.Status
                 })
